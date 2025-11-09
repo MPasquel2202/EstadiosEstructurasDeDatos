@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cstdlib>
+#include <functional>
+
+using namespace std;
+
+int main()
+{
+    const int DIM = 3;
+
+    // Asignar memoria dinámica con malloc
+    int **matriz1 = (int **)malloc(DIM * sizeof(int *));
+    int **matriz2 = (int **)malloc(DIM * sizeof(int *));
+    int **matrizResultado = (int **)malloc(DIM * sizeof(int *));
+
+    for (int i = 0; i < DIM; i++)
+    {
+        *(matriz1 + i) = (int *)malloc(DIM * sizeof(int));
+        *(matriz2 + i) = (int *)malloc(DIM * sizeof(int));
+        *(matrizResultado + i) = (int *)malloc(DIM * sizeof(int));
+    }
+
+    // Lambda para inicializar una matriz
+    auto inicializarMatriz = [](int **matriz, int dim, int valorInicial)
+    {
+        for (int i = 0; i < dim; i++)
+            for (int j = 0; j < dim; j++)
+                *(*(matriz + i) + j) = valorInicial + (i * dim + j);
+    };
+
+    // Lambda para mostrar una matriz
+    auto mostrarMatriz = [](int **matriz, int dim, const char *nombre)
+    {
+        cout << "\n" << nombre << ":\n";
+        for (int i = 0; i < dim; i++)
+        {
+            for (int j = 0; j < dim; j++)
+                cout << *(*(matriz + i) + j) << "\t";
+            cout << endl;
+        }
+    };
+
+    // Lambda recursiva para sumar matrices
+    function<void(int **, int **, int **, int, int, int)> sumarMatrices =
+        [&sumarMatrices](int **m1, int **m2, int **resultado, int dim, int i, int j)
+    {
+        if (i >= dim)
+            return;
+
+        *(*(resultado + i) + j) = *(*(m1 + i) + j) + *(*(m2 + i) + j);
+
+        if (j + 1 < dim)
+            sumarMatrices(m1, m2, resultado, dim, i, j + 1);
+        else
+            sumarMatrices(m1, m2, resultado, dim, i + 1, 0);
+    };
+
+    // --- PROGRAMA ---
+    cout << "=== PROGRAMA DE SUMA DE MATRICES 3x3 ===\n";
+    cout << "Usando funciones lambda y memoria dinamica (malloc)\n";
+
+    inicializarMatriz(matriz1, DIM, 1);
+    inicializarMatriz(matriz2, DIM, 10);
+
+    mostrarMatriz(matriz1, DIM, "Matriz 1");
+    mostrarMatriz(matriz2, DIM, "Matriz 2");
+
+    sumarMatrices(matriz1, matriz2, matrizResultado, DIM, 0, 0);
+
+    mostrarMatriz(matrizResultado, DIM, "Matriz Resultado (Matriz1 + Matriz2)");
+
+    // Liberar memoria
+    for (int i = 0; i < DIM; i++)
+    {
+        free(*(matriz1 + i));
+        free(*(matriz2 + i));
+        free(*(matrizResultado + i));
+EjercicioLambda.cpp.save    }
+    free(matriz1);
+    free(matriz2);
+    free(matrizResultado);
+
+    cout << "\nMemoria liberada correctamente.\n";
+    return 0;
+}
+
