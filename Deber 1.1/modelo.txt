@@ -1,0 +1,43 @@
+class Anio {
+    - anioBisiesto : bool
+    - anio : int
+    + getAnioBisiesto() : bool
+    + setAnioBisiesto(newAnioBisiesto : bool) : void
+    + getAnio() : int
+    + setAnio(newAnio : int) : void
+}
+
+class Fecha {
+    - anio : Anio
+    - mes : int
+    - dia : int
+    + getAnio() : Anio
+    + setAnio(newAnio : Anio) : void
+    + getMes() : int
+    + setMes(newMes : int) : void
+    + getDia() : int
+    + setDia(newDia : int) : void
+}
+
+class IngresoDatos {
+    - valor : int
+    + getValor() : int
+    + setValor(newValor : int) : void
+    + pedirNumero(msj : char[20]) : int
+}
+
+class ValidarAnio {
+    + esBisiesto(anio : int) : bool
+    + validarAnio(anio : int) : bool
+}
+
+class ValidarMes {
+    + validarMes(mes : int) : bool
+}
+
+class ValidarDia {
+    + validarDia(dia : int, mes : int, anio : int) : bool
+}
+
+// Relaciones
+Fecha --> Anio
