@@ -1,0 +1,60 @@
+{
+  "inventarios": [
+    {
+      "capacidad": {
+        "GENERAL": 100,
+        "PALCO": 30,
+        "TRIBUNA": 50
+      },
+      "eventoId": "EVT-001",
+      "limitePorUsuario": 10,
+      "ocupados": {
+        "GENERAL": 11,
+        "PALCO": 6,
+        "TRIBUNA": 10
+      }
+    },
+    {
+      "capacidad": {
+        "GENERAL": 200,
+        "PALCO": 40,
+        "TRIBUNA": 80
+      },
+      "eventoId": "EVT-002",
+      "limitePorUsuario": 8,
+      "ocupados": {
+        "GENERAL": 1,
+        "PALCO": 0,
+        "TRIBUNA": 0
+      }
+    },
+    {
+      "capacidad": {
+        "GENERAL": 150,
+        "PALCO": 20,
+        "TRIBUNA": 70
+      },
+      "eventoId": "EVT-003",
+      "limitePorUsuario": 6,
+      "ocupados": {
+        "GENERAL": 0,
+        "PALCO": 0,
+        "TRIBUNA": 0
+      }
+    },
+    {
+      "capacidad": {
+        "GENERAL": 9,
+        "PALCO": 20,
+        "TRIBUNA": 70
+      },
+      "eventoId": "EVT-004",
+      "limitePorUsuario": 50,
+      "ocupados": {
+        "GENERAL": 0,
+        "PALCO": 0,
+        "TRIBUNA": 0
+      }
+    }
+  ]
+}
