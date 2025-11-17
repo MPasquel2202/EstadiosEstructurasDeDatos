@@ -9,9 +9,9 @@
       "eventoId": "EVT-001",
       "limitePorUsuario": 10,
       "ocupados": {
-        "GENERAL": 11,
-        "PALCO": 6,
-        "TRIBUNA": 10
+        "GENERAL": 10,
+        "PALCO": 3,
+        "TRIBUNA": 6
       }
     },
     {

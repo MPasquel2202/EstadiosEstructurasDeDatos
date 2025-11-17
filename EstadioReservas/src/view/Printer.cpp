@@ -39,14 +39,18 @@ namespace Printer{
     }
 
     void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos){
-        titulo("Mis reservas (" + u.nombre + ")");
-        if(u.reservas.size()==0){ std::cout << "Sin reservas.\n"; return; }
-        u.reservas.for_each([&](const Reserva& r){
-            const Evento* ev = eventos.find([&](const Evento& e){ return e.id == r.eventoId; });
-            std::string nom = ev ? ev->nombre : "(evento desconocido)";
-            std::cout << r.eventoId << " | " << nom
-                      << " | G=" << r.general << ", T=" << r.tribuna << ", P=" << r.palco
-                      << " | Total=" << r.total() << "\n";
-        });
+    titulo("Mis reservas (" + u.nombre + " - " + u.cedula + ")");
+    if(u.reservas.size()==0){ 
+        std::cout << "Sin reservas.\n"; 
+        return; 
     }
+    u.reservas.for_each([&](const Reserva& r){
+        const Evento* ev = eventos.find([&](const Evento& e){ return e.id == r.eventoId; });
+        std::string nom = ev ? ev->nombre : "(evento desconocido)";
+        std::cout << r.eventoId << " | " << nom
+                  << " | G=" << r.general << ", T=" << r.tribuna << ", P=" << r.palco
+                  << " | Total=" << r.total() << "\n";
+    });
+}
+
 }

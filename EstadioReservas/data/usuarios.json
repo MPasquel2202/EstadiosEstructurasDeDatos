@@ -17,9 +17,9 @@
       "nombre": "Marlon Pasquel",
       "reservas": [
         {
-          "GENERAL": 1,
-          "PALCO": 4,
-          "TRIBUNA": 5,
+          "GENERAL": 0,
+          "PALCO": 1,
+          "TRIBUNA": 1,
           "eventoId": "EVT-001"
         }
       ]

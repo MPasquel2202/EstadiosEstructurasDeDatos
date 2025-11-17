@@ -11,7 +11,6 @@ namespace InputUtils{
         std::string s; 
         std::getline(std::cin, s);
 
-        // Verificar si está vacía o solo contiene espacios
         bool soloEspacios = true;
         for(char c : s){
             if(!std::isspace((unsigned char)c)){
@@ -20,15 +19,14 @@ namespace InputUtils{
             }
         }
         if(s.empty() || soloEspacios)
-            throw EntradaInvalida("Entrada vacía");
+            throw EntradaInvalida("Entrada vacia");
 
         if(s.size() < minLen)
             throw EntradaInvalida("Entrada demasiado corta");
 
-        // Validación vía regex (no vacío)
         std::regex patron("^.+$");
         if(!std::regex_match(s, patron))
-            throw EntradaInvalida("Formato inválido");
+            throw EntradaInvalida("Formato invalido");
 
         return s;
     }
@@ -39,7 +37,6 @@ namespace InputUtils{
             std::getline(std::cin, s);
 
             try{
-                // Verificar si está vacía o solo contiene espacios
                 bool soloEspacios = true;
                 for(char c : s){
                     if(!std::isspace((unsigned char)c)){
@@ -48,12 +45,11 @@ namespace InputUtils{
                     }
                 }
                 if(s.empty() || soloEspacios)
-                    throw EntradaInvalida("Entrada vacía");
+                    throw EntradaInvalida("Entrada vacia");
 
-                // Validar formato entero
                 std::regex patron("^-?[0-9]+$");
                 if(!std::regex_match(s, patron))
-                    throw EntradaInvalida("Formato inválido");
+                    throw EntradaInvalida("Formato invalido");
 
                 int v = std::stoi(s);
 
@@ -72,7 +68,6 @@ namespace InputUtils{
         if(s.size() < 2)
             return false;
 
-        // Rechazar si es solo espacios
         bool soloEspacios = true;
         for(char c : s){
             if(!std::isspace((unsigned char)c)){
@@ -83,7 +78,6 @@ namespace InputUtils{
         if(soloEspacios) 
             return false;
 
-            // Rechazar si hay espacios al principio o al final
         if(std::isspace((unsigned char)s.front()) || std::isspace((unsigned char)s.back()))
         return false;
 
