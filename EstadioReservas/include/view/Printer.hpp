@@ -16,4 +16,5 @@ namespace Printer{
 
     void mostrarInventario(const InventarioEvento& inv);
     void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos);
+    
 }

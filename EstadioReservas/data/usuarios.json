@@ -39,7 +39,26 @@
     {
       "cedula": "1754616223",
       "nombre": "Brandon Pazmino ",
-      "reservas": []
+      "reservas": [
+        {
+          "GENERAL": 1,
+          "PALCO": 1,
+          "TRIBUNA": 1,
+          "eventoId": "EVT-001"
+        },
+        {
+          "GENERAL": 2,
+          "PALCO": 0,
+          "TRIBUNA": 5,
+          "eventoId": "EVT-002"
+        },
+        {
+          "GENERAL": 1,
+          "PALCO": 5,
+          "TRIBUNA": 2,
+          "eventoId": "EVT-004"
+        }
+      ]
     },
     {
       "cedula": "0801481029",

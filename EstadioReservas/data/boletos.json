@@ -9,9 +9,9 @@
       "eventoId": "EVT-001",
       "limitePorUsuario": 10,
       "ocupados": {
-        "GENERAL": 10,
-        "PALCO": 3,
-        "TRIBUNA": 6
+        "GENERAL": 11,
+        "PALCO": 4,
+        "TRIBUNA": 7
       }
     },
     {
@@ -23,9 +23,9 @@
       "eventoId": "EVT-002",
       "limitePorUsuario": 8,
       "ocupados": {
-        "GENERAL": 1,
+        "GENERAL": 3,
         "PALCO": 0,
-        "TRIBUNA": 0
+        "TRIBUNA": 5
       }
     },
     {
@@ -51,9 +51,9 @@
       "eventoId": "EVT-004",
       "limitePorUsuario": 50,
       "ocupados": {
-        "GENERAL": 0,
-        "PALCO": 0,
-        "TRIBUNA": 0
+        "GENERAL": 1,
+        "PALCO": 5,
+        "TRIBUNA": 2
       }
     }
   ]

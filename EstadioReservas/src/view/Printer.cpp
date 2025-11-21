@@ -1,6 +1,7 @@
 #include "view/Printer.hpp"
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 namespace Printer{
     void titulo(const std::string& t){ std::cout << "\n=== " << t << " ===\n"; }
@@ -38,19 +39,45 @@ namespace Printer{
                   << " (disp " << (inv.capPalco   - inv.occPalco)   << ")\n";
     }
 
-    void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos){
+void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos){
     titulo("Mis reservas (" + u.nombre + " - " + u.cedula + ")");
-    if(u.reservas.size()==0){ 
-        std::cout << "Sin reservas.\n"; 
-        return; 
+
+    if(u.reservas.size() == 0){
+        std::cout << "Sin reservas.\n";
+        return;
     }
+
+    std::vector<const Reserva*> ordenadas;
+    ordenadas.reserve(u.reservas.size());
+
     u.reservas.for_each([&](const Reserva& r){
-        const Evento* ev = eventos.find([&](const Evento& e){ return e.id == r.eventoId; });
-        std::string nom = ev ? ev->nombre : "(evento desconocido)";
-        std::cout << r.eventoId << " | " << nom
-                  << " | G=" << r.general << ", T=" << r.tribuna << ", P=" << r.palco
-                  << " | Total=" << r.total() << "\n";
+        ordenadas.push_back(&r);
     });
+
+    std::sort(ordenadas.begin(), ordenadas.end(),
+        [&](const Reserva* a, const Reserva* b){
+            const Evento* ea = eventos.find([&](const Evento& e){ return e.id == a->eventoId; });
+            const Evento* eb = eventos.find([&](const Evento& e){ return e.id == b->eventoId; });
+
+            Fecha fa = ea ? ea->fecha : Fecha();
+            Fecha fb = eb ? eb->fecha : Fecha();
+
+            return fa < fb;  
+        }
+    );
+
+    for(const Reserva* r : ordenadas){
+        const Evento* ev = eventos.find([&](const Evento& e){ return e.id == r->eventoId; });
+        std::string nom = ev ? ev->nombre : "(evento desconocido)";
+
+        std::cout << r->eventoId << " | " << nom
+                  << " | G=" << r->general
+                  << ", T=" << r->tribuna
+                  << ", P=" << r->palco
+                  << " | Total=" << r->total()
+                  << "\n";
+    }
 }
+
 
 }
