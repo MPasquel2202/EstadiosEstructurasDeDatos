@@ -1,0 +1,24 @@
+{
+  "eventos": [
+    {
+      "id": "EVT-001",
+      "nombre": "Clasico del Astillero",
+      "fecha": "2025-12-05"
+    },
+    {
+      "id": "EVT-002",
+      "nombre": "Final Campeonato",
+      "fecha": "2025-12-20"
+    },
+    {
+      "id": "EVT-003",
+      "nombre": "Amistoso Internacional",
+      "fecha": "2022-01-15"
+    },
+    {
+      "id": "EVT-004",
+      "nombre": "Concierto Shakira",
+      "fecha": "2028-01-15"
+    }
+  ]
+}

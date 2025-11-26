@@ -1,0 +1,81 @@
+{
+  "usuarios": [
+    {
+      "cedula": "1710034065",
+      "nombre": "JuanPerez",
+      "reservas": [
+        {
+          "GENERAL": 2,
+          "PALCO": 0,
+          "TRIBUNA": 0,
+          "eventoId": "EVT-001"
+        }
+      ]
+    },
+    {
+      "cedula": "1721510947",
+      "nombre": "Marlon Pasquel",
+      "reservas": [
+        {
+          "GENERAL": 0,
+          "PALCO": 1,
+          "TRIBUNA": 1,
+          "eventoId": "EVT-001"
+        }
+      ]
+    },
+    {
+      "cedula": "0400878021",
+      "nombre": "Marlon Pasquel",
+      "reservas": [
+        {
+          "GENERAL": 1,
+          "PALCO": 0,
+          "TRIBUNA": 0,
+          "eventoId": "EVT-002"
+        }
+      ]
+    },
+    {
+      "cedula": "1754616223",
+      "nombre": "Brandon Pazmino ",
+      "reservas": [
+        {
+          "GENERAL": 1,
+          "PALCO": 1,
+          "TRIBUNA": 1,
+          "eventoId": "EVT-001"
+        },
+        {
+          "GENERAL": 2,
+          "PALCO": 0,
+          "TRIBUNA": 5,
+          "eventoId": "EVT-002"
+        },
+        {
+          "GENERAL": 1,
+          "PALCO": 5,
+          "TRIBUNA": 2,
+          "eventoId": "EVT-004"
+        }
+      ]
+    },
+    {
+      "cedula": "0801481029",
+      "nombre": "              k  l",
+      "reservas": []
+    },
+    {
+      "cedula": "1004259444",
+      "nombre": "Roberto",
+      "reservas": [
+        {
+          "GENERAL": 2,
+          "PALCO": 3,
+          "TRIBUNA": 2,
+          "eventoId": "EVT-004"
+        }
+      ]
+    }
+  ]
+}
