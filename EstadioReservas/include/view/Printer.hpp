@@ -5,6 +5,8 @@
 #include "model/Evento.hpp"
 #include "model/Usuario.hpp"
 #include "model/InventarioEvento.hpp"
+#include <vector>
+#include "model/Reserva.hpp"
 
 namespace Printer{
     void titulo(const std::string& t);
@@ -16,5 +18,7 @@ namespace Printer{
 
     void mostrarInventario(const InventarioEvento& inv);
     void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos);
+        void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas, 
+                                       const LinkedList<Evento>& eventos);
     
 }

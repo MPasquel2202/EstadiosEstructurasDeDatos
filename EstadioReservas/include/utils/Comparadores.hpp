@@ -20,12 +20,12 @@ namespace Comparadores {
     }
 
     // Comparadores para asientos (se manejan en OrdenadorEventos)
-    inline bool porAsientosAsc(Evento* a, Evento* b) {
+    inline bool porAsientosAsc(Evento* /* a */, Evento* /* b */) {
         // Estos no se usan directamente - se manejan en los métodos específicos
         return true;
     }
 
-    inline bool porAsientosDesc(Evento* a, Evento* b) {
+    inline bool porAsientosDesc(Evento* /* a */, Evento* /* b */) {
         return false;
     }
 }

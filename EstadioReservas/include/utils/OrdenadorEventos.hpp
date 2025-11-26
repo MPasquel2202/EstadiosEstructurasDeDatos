@@ -17,14 +17,10 @@ private:
     int getAsientosDisponibles(const std::string& eventoId) {
         auto it = inventariosMap.find(eventoId);
         if (it != inventariosMap.end() && it->second != nullptr) {
-            int total = 0;
-            for (const auto& [tipo, capacidad] : it->second->capacidad) {
-                auto ocupadosIt = it->second->ocupados.find(tipo);
-                if (ocupadosIt != it->second->ocupados.end()) {
-                    total += capacidad - ocupadosIt->second;
-                }
-            }
-            return total;
+            int general = it->second->capGeneral - it->second->occGeneral;
+            int tribuna = it->second->capTribuna - it->second->occTribuna;
+            int palco = it->second->capPalco - it->second->occPalco;
+            return general + tribuna + palco;
         }
         return 0;
     }
@@ -44,7 +40,7 @@ private:
         while (i <= mid) temp[k++] = eventos[i++];
         while (j <= right) temp[k++] = eventos[j++];
 
-        for (int x = 0; x < temp.size(); ++x) {
+        for (size_t x = 0; x < temp.size(); ++x) {
             eventos[left + x] = temp[x];
         }
     }

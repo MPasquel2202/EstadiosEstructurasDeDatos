@@ -17,6 +17,7 @@
 #include "utils/InputUtils.hpp"
 #include "view/MenuView.hpp"
 #include "view/Printer.hpp"
+#include "utils/OrdenamientoController.hpp"
 
 static void guardarUsuarios(const LinkedList<Usuario>& usuarios){
     JsonStore::saveUsuarios(usuarios, "data/usuarios.json");
@@ -59,7 +60,7 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Ver mis reservas  [3] Cancelar reserva  [0] Cerrar sesion \n Opcion: ";
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [0] Cerrar sesion \n Opcion: ";
                 int opc = InputUtils::leerEnteroEnRango(0,3);
 
                 switch(opc){
@@ -85,7 +86,7 @@ int main(){
                         break;
                     }
                     case 2: {
-                        Printer::mostrarReservasUsuario(*usr, eventos);
+                        OrdenamientoController::mostrarMenuOrdenamientoReservas(*usr, eventos);
                         break;
                     }
                     case 3: {

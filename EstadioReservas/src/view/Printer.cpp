@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <vector>
 
 namespace Printer{
     void titulo(const std::string& t){ std::cout << "\n=== " << t << " ===\n"; }
@@ -74,10 +75,38 @@ void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos)
                   << " | G=" << r->general
                   << ", T=" << r->tribuna
                   << ", P=" << r->palco
-                  << " | Total=" << r->total()
-                  << "\n";
+                  << " | Total=" << r->total() << "\n";
     }
 }
 
+void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas, 
+                              const LinkedList<Evento>& eventos){
+    titulo("Mis reservas ordenadas (" + u.nombre + " - " + u.cedula + ")");
 
+    if(reservas.empty()){
+        std::cout << "Sin reservas.\n";
+        return;
+    }
+
+    std::cout << std::left << std::setw(12) << "Evento ID"
+              << std::setw(30) << "Nombre del Evento"
+              << std::setw(5) << "Gen"
+              << std::setw(5) << "Trib"
+              << std::setw(5) << "Palco"
+              << "Total" << "\n";
+    linea();
+
+    for(const Reserva* r : reservas){
+        const Evento* ev = eventos.find([&](const Evento& e){ return e.id == r->eventoId; });
+        std::string nom = ev ? ev->nombre : "(evento desconocido)";
+
+        std::cout << std::left << std::setw(12) << r->eventoId
+                  << std::setw(30) << nom.substr(0, 29)
+                  << std::setw(5) << r->general
+                  << std::setw(5) << r->tribuna
+                  << std::setw(5) << r->palco
+                  << r->total()
+                  << "\n";
+    }
+}
 }
