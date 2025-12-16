@@ -76,6 +76,11 @@
           "eventoId": "EVT-004"
         }
       ]
+    },
+    {
+      "cedula": "1002565909",
+      "nombre": "Maria Cruz",
+      "reservas": []
     }
   ]
 }

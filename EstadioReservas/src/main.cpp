@@ -60,8 +60,8 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,3);
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,4); // Cambiado a 4
 
                 switch(opc){
                     case 1: {
@@ -86,7 +86,8 @@ int main(){
                         break;
                     }
                     case 2: {
-                        OrdenamientoController::mostrarMenuOrdenamientoReservas(*usr, eventos);
+                        // Menú completo de ordenamiento (eventos e inventarios)
+                        OrdenamientoController::mostrarMenuOrdenamiento(eventos, inventarios);
                         break;
                     }
                     case 3: {
@@ -103,6 +104,11 @@ int main(){
                         }else{
                             std::cout << "Error de configuracion: inventario inexistente.\n";
                         }
+                        break;
+                    }
+                    case 4: {
+                        // Nueva opción directa para ordenar letras de nombres
+                        OrdenamientoController::ordenarLetrasNombresUsuarios();
                         break;
                     }
                     case 0:

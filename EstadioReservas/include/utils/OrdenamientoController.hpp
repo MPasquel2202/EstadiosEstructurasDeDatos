@@ -14,10 +14,16 @@ public:
     static void mostrarMenuOrdenamientoReservas(Usuario& usuario,
                                                const LinkedList<Evento>& eventos);
     
+    // NUEVAS FUNCIONES AGREGADAS
+    static void ordenarLetrasNombresUsuarios();
+    
 private:
     static void aplicarOrdenamiento(OrdenadorEventos<Evento>& ordenador,
                                   int criterio, int algoritmo, bool ascendente);
     
     static std::string obtenerNombreAlgoritmo(int algoritmo);
     static std::string obtenerNombreCriterio(int criterio);
+    
+    // FUNCIÓN AUXILIAR PARA ORDENAR LETRAS DE UN NOMBRE
+    static std::string ordenarLetrasNombre(const std::string& nombre);
 };

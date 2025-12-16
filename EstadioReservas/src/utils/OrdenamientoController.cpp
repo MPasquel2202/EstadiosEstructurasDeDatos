@@ -1,11 +1,16 @@
 #include <iostream>
-#include "utils/InputUtils.hpp"
-#include "utils/OrdenamientoController.hpp"
-#include "view/Printer.hpp"
 #include <algorithm>
 #include <vector>
+#include <cctype>
+#include <fstream>
+#include <sstream>
+#include "utils/InputUtils.hpp"
+#include "utils/OrdenamientoController.hpp"
+#include "utils/JsonStore.hpp"
+#include "view/Printer.hpp"
 #include "model/Reserva.hpp"
 #include "model/Fecha.hpp"
+#include "model/Usuario.hpp"
 
 void OrdenamientoController::mostrarMenuOrdenamiento(LinkedList<Evento>& eventos, 
                                                    LinkedList<InventarioEvento>& inventarios) {
@@ -31,11 +36,18 @@ void OrdenamientoController::mostrarMenuOrdenamiento(LinkedList<Evento>& eventos
         std::cout << "[1] Por Fecha" << std::endl;
         std::cout << "[2] Por Evento más Cercano" << std::endl;
         std::cout << "[3] Por Asientos Disponibles" << std::endl;
+        std::cout << "[4] Ordenar Letras de Nombres de Usuarios" << std::endl;
         std::cout << "[0] Volver al menú principal" << std::endl;
         std::cout << "Seleccione criterio: ";
         
-        int opcCriterio = InputUtils::leerEnteroEnRango(0, 3);
+        int opcCriterio = InputUtils::leerEnteroEnRango(0, 4);
         if(opcCriterio == 0) break;
+        
+        if(opcCriterio == 4) {
+            // Caso especial para ordenar letras de nombres
+            ordenarLetrasNombresUsuarios();
+            continue;
+        }
         
         std::cout << "\n=== ALGORITMOS DE ORDENAMIENTO ===" << std::endl;
         std::cout << "[1] Selección     [2] Inserción" << std::endl;
@@ -69,6 +81,147 @@ void OrdenamientoController::mostrarMenuOrdenamiento(LinkedList<Evento>& eventos
         std::cin.ignore();
         std::cin.get();
     }
+}
+
+void OrdenamientoController::ordenarLetrasNombresUsuarios() {
+    std::cout << "\n" << std::string(50, '=') << std::endl;
+    std::cout << "ORDENAR LETRAS DE NOMBRES DE USUARIOS" << std::endl;
+    std::cout << std::string(50, '=') << std::endl;
+    
+    try {
+        // ✅ CAMBIO IMPORTANTE: Recargar usuarios CADA VEZ que se ejecuta
+        LinkedList<Usuario> usuarios;
+        JsonStore::loadUsuarios(usuarios, "data/usuarios.json");
+        
+        if (usuarios.size() == 0) {
+            std::cout << "No hay usuarios registrados.\n";
+            return;
+        }
+        
+        // Extraer nombres de usuarios
+        std::vector<std::string> nombresUsuarios;
+        usuarios.for_each([&](Usuario& usuario) {
+            nombresUsuarios.push_back(usuario.nombre);
+        });
+        
+        // FUNCIÓN LAMBDA para ordenar nombres alfabéticamente
+        auto comparadorNombres = [](const std::string& a, const std::string& b) {
+            std::string aMin = a;
+            std::string bMin = b;
+            std::transform(aMin.begin(), aMin.end(), aMin.begin(), ::tolower);
+            std::transform(bMin.begin(), bMin.end(), bMin.begin(), ::tolower);
+            return aMin < bMin;
+        };
+        
+        // Ordenar los nombres alfabéticamente usando la lambda
+        std::sort(nombresUsuarios.begin(), nombresUsuarios.end(), comparadorNombres);
+        
+        std::cout << "\nNombres originales de usuarios (ordenados alfabéticamente):\n";
+        std::cout << std::string(50, '-') << std::endl;
+        
+        // Mostrar nombres originales y procesar cada nombre
+        for (const auto& nombreOriginal : nombresUsuarios) {
+            if (nombreOriginal.empty()) {
+                std::cout << "• (Nombre vacío)" << std::endl;
+            } else {
+                std::cout << "• " << nombreOriginal << std::endl;
+                
+                // Ordenar las letras del nombre alfabéticamente en grupos de 3
+                std::string nombreOrdenado = ordenarLetrasNombre(nombreOriginal);
+                
+                // Mostrar resultado
+                std::cout << "  Letras ordenadas: " << nombreOrdenado << std::endl;
+            }
+            std::cout << std::endl;
+        }
+        
+        std::cout << "Total de usuarios encontrados: " << nombresUsuarios.size() << std::endl;
+        
+    } catch(const std::exception& e) {
+        std::cout << "Error al cargar usuarios: " << e.what() << std::endl;
+        
+        // Mostrar datos de ejemplo en caso de error
+        std::cout << "\n--- MOSTRANDO DATOS DE EJEMPLO ---" << std::endl;
+        std::vector<std::string> nombresEjemplo = {
+            "JuanPerez",
+            "Marlon Pasquel",
+            "Brandon Pazmino", 
+            "Roberto",
+            "k l"
+        };
+        
+        for (const auto& nombre : nombresEjemplo) {
+            std::cout << "• " << nombre << std::endl;
+            std::string nombreOrdenado = ordenarLetrasNombre(nombre);
+            std::cout << "  Letras ordenadas: " << nombreOrdenado << std::endl << std::endl;
+        }
+    }
+}
+
+std::string OrdenamientoController::ordenarLetrasNombre(const std::string& nombre) {
+    if (nombre.empty()) {
+        return "(vacío)";
+    }
+    
+    std::string nombreLimpio = nombre;
+    
+    // Convertir a minúsculas para ordenación case-insensitive
+    std::transform(nombreLimpio.begin(), nombreLimpio.end(), nombreLimpio.begin(), ::tolower);
+    
+    // Separar letras
+    std::vector<char> letras;
+    for (char c : nombreLimpio) {
+        if (std::isalpha(c)) { // Solo incluir letras
+            letras.push_back(c);
+        }
+    }
+    
+    if (letras.empty()) {
+        // Si no hay letras, mostrar los caracteres no alfabéticos ordenados
+        std::vector<char> caracteres;
+        for (char c : nombreLimpio) {
+            if (!std::isspace(c)) { // Excluir espacios
+                caracteres.push_back(c);
+            }
+        }
+        
+        if (caracteres.empty()) {
+            return "(solo espacios)";
+        }
+        
+        std::sort(caracteres.begin(), caracteres.end());
+        std::string resultado;
+        for (char c : caracteres) {
+            resultado += c;
+            resultado += ' ';
+        }
+        if (!resultado.empty()) resultado.pop_back();
+        return resultado;
+    }
+    
+    // Ordenar las letras alfabéticamente
+    std::sort(letras.begin(), letras.end());
+    
+    // FUNCIÓN LAMBDA para agrupar en tripletes
+    auto agruparEnTripletes = [](const std::vector<char>& letras) -> std::string {
+        std::string resultado;
+        for (size_t i = 0; i < letras.size(); ++i) {
+            resultado += letras[i];
+            
+            // Agrupar en tripletes separados por espacios
+            if ((i + 1) % 3 == 0 && i != letras.size() - 1) {
+                resultado += "    ";
+            } else if (i != letras.size() - 1) {
+                resultado += ' ';
+            }
+        }
+        return resultado;
+    };
+    
+    // Reconstruir el string ordenado en grupos de 3
+    std::string resultado = agruparEnTripletes(letras);
+    
+    return resultado;
 }
 
 void OrdenamientoController::aplicarOrdenamiento(OrdenadorEventos<Evento>& ordenador,
@@ -145,6 +298,7 @@ std::string OrdenamientoController::obtenerNombreCriterio(int criterio) {
         case 1: return "Fecha";
         case 2: return "Evento más Cercano";
         case 3: return "Asientos Disponibles";
+        case 4: return "Letras de Nombres de Usuarios";
         default: return "Desconocido";
     }
 }
