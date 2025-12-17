@@ -29,6 +29,7 @@ namespace AuthController{
             usuarios.for_each([&](Usuario& uu){ if(CedulaEC::validar(uu.cedula)) arr[filled++] = &uu; });
 
             if(filled > 0){
+                // Búsqueda binaria #1: login por cédula (ordenamos punteros y buscamos)
                 // Ordenar por cédula usando quicksort basado en punteros (utilitario compartido)
                 QuickSortPtr::quickSort<Usuario*>(arr, arr + (ptrdiff_t)filled - 1, [](const Usuario* a, const Usuario* b){ return a->cedula < b->cedula; });
 

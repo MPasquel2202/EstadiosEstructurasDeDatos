@@ -69,8 +69,8 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Imprimir tabla hash de inventarios  [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,5); // Cambiado a 5
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Imprimir tabla hash de inventarios  [6] Filtrar eventos por fecha  [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,6); // Cambiado a 6
 
                 switch(opc){
                     case 1: {
@@ -123,6 +123,10 @@ int main(){
                     case 5: {
                         HashTable tabla = construirTablaHashInventarios(inventarios);
                         Printer::imprimirTablaHashInventarios(tabla);
+                        break;
+                    }
+                    case 6: {
+                        EventoController::filtrarPorFecha(eventos, inventarios);
                         break;
                     }
                     case 0:
