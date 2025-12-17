@@ -20,7 +20,8 @@ SRCS = \
   $(SRC_DIR)/utils/DateUtils.cpp \
   $(SRC_DIR)/utils/JsonStore.cpp \
   $(SRC_DIR)/utils/InputUtils.cpp \
-  $(SRC_DIR)/utils/OrdenamientoController.cpp  # NUEVO ARCHIVO
+  $(SRC_DIR)/utils/OrdenamientoController.cpp \
+  $(SRC_DIR)/structures/HashTable.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
