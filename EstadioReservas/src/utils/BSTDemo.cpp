@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 
-struct DemoValor {
+class DemoValor {
+public:
     std::string nombre;
 };
 
