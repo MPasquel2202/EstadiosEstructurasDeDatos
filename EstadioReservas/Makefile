@@ -21,7 +21,9 @@ SRCS = \
   $(SRC_DIR)/utils/JsonStore.cpp \
   $(SRC_DIR)/utils/InputUtils.cpp \
   $(SRC_DIR)/utils/OrdenamientoController.cpp \
-  $(SRC_DIR)/structures/HashTable.cpp
+  $(SRC_DIR)/utils/BSTDemo.cpp \
+  $(SRC_DIR)/structures/HashTable.cpp \
+  $(SRC_DIR)/structures/BinarySearchTree.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

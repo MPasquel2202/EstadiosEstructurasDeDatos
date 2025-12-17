@@ -10,45 +10,29 @@ namespace EventoController{
         return DateUtils::esReservable(e.fecha, DateUtils::hoy());
     }
 
-    Evento* seleccionarEvento(LinkedList<Evento>& eventos){
+    Evento* buscarEventoPorIdBST(BinarySearchTree<Evento>& indice, const std::string& id){
+        return indice.find(id);
+    }
+
+    const Evento* buscarEventoPorIdBST(const BinarySearchTree<Evento>& indice, const std::string& id){
+        return indice.find(id);
+    }
+
+    Evento* seleccionarEvento(BinarySearchTree<Evento>& indice){
         std::cout << "Ingrese ID de evento: ";
         std::string id = InputUtils::leerLineaNoVacia(1);
-        
-        std::vector<Evento*> arr;
-        eventos.for_each([&](Evento& e){ arr.push_back(&e); });
-        if(arr.empty()){ std::cout << "Evento no encontrado.\n"; return nullptr; }
 
-        QuickSortPtr::quickSort<Evento*>(arr, [](const Evento* a, const Evento* b){ return a->id < b->id; });
-
-        int l = 0, r = (int)arr.size()-1;
-        while(l <= r){
-            int m = l + (r-l)/2;
-            // arr[m] -> *(arr.data() + m)
-            if((*(arr.data() + m))->id == id) return *(arr.data() + m);
-            if((*(arr.data() + m))->id < id) l = m + 1; else r = m - 1;
-        }
+        if(auto* encontrado = buscarEventoPorIdBST(indice, id)) return encontrado;
 
         std::cout << "Evento no encontrado.\n";
         return nullptr;
     }
 
-    const Evento* seleccionarEvento(const LinkedList<Evento>& eventos){
+    const Evento* seleccionarEvento(const BinarySearchTree<Evento>& indice){
         std::cout << "Ingrese ID de evento: ";
         std::string id = InputUtils::leerLineaNoVacia(1);
-        
-        std::vector<const Evento*> arr;
-        eventos.for_each([&](const Evento& e){ arr.push_back(&e); });
-        if(arr.empty()){ std::cout << "Evento no encontrado.\n"; return nullptr; }
 
-        QuickSortPtr::quickSort<const Evento*>(arr, [](const Evento* a, const Evento* b){ return a->id < b->id; });
-
-        int l = 0, r = (int)arr.size()-1;
-        while(l <= r){
-            int m = l + (r-l)/2;
-            // arr[m] -> *(arr.data() + m)
-            if((*(arr.data() + m))->id == id) return *(arr.data() + m);
-            if((*(arr.data() + m))->id < id) l = m + 1; else r = m - 1;
-        }
+        if(auto* encontrado = buscarEventoPorIdBST(indice, id)) return encontrado;
 
         std::cout << "Evento no encontrado.\n";
         return nullptr;
