@@ -4,7 +4,8 @@
 #include "ds/LinkedList.hpp"
 #include "model/Reserva.hpp"
 
-struct Usuario{
+class Usuario{
+public:
     std::string cedula;
     std::string nombre;
     LinkedList<Reserva> reservas;

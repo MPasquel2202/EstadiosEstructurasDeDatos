@@ -3,7 +3,8 @@
 #include <string>
 #include <ostream>
 
-struct Reserva {
+class Reserva {
+public:
     std::string eventoId;
     int general{0};
     int tribuna{0};

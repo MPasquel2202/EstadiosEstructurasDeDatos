@@ -3,11 +3,12 @@
 #include <string>
 #include <ostream>
 
-struct Fecha{
+class Fecha{
+public:
     int y{1970}, m{1}, d{1};
     std::string iso() const;
     static Fecha hoy();
-    static Fecha parseISO(const std::string& s); 
+    static Fecha parseISO(const std::string& s);
 };
 
 bool operator==(const Fecha& a, const Fecha& b);
