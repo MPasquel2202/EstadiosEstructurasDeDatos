@@ -18,6 +18,7 @@
 #include "view/MenuView.hpp"
 #include "view/Printer.hpp"
 #include "utils/OrdenamientoController.hpp"
+#include "structures/HashTable.h"
 
 static void guardarUsuarios(const LinkedList<Usuario>& usuarios){
     JsonStore::saveUsuarios(usuarios, "data/usuarios.json");
@@ -60,8 +61,8 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,4); // Cambiado a 4
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Imprimir tabla hash de inventarios  [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,5); // Cambiado a 5
 
                 switch(opc){
                     case 1: {
@@ -109,6 +110,11 @@ int main(){
                     case 4: {
                         // Nueva opción directa para ordenar letras de nombres
                         OrdenamientoController::ordenarLetrasNombresUsuarios();
+                        break;
+                    }
+                    case 5: {
+                        HashTable tabla = construirTablaHashInventarios(inventarios);
+                        Printer::imprimirTablaHashInventarios(tabla);
                         break;
                     }
                     case 0:

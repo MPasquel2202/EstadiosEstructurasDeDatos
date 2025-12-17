@@ -5,6 +5,7 @@
 #include "model/Evento.hpp"
 #include "model/Usuario.hpp"
 #include "model/InventarioEvento.hpp"
+#include "structures/HashTable.h"
 #include <vector>
 #include "model/Reserva.hpp"
 
@@ -18,7 +19,8 @@ namespace Printer{
 
     void mostrarInventario(const InventarioEvento& inv);
     void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos);
-        void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas, 
+        void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas,
                                        const LinkedList<Evento>& eventos);
-    
+    void imprimirTablaHashInventarios(const HashTable& tabla);
+
 }

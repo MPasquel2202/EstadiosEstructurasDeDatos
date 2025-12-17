@@ -79,7 +79,7 @@ void mostrarReservasUsuario(const Usuario& u, const LinkedList<Evento>& eventos)
     }
 }
 
-void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas, 
+void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas,
                               const LinkedList<Evento>& eventos){
     titulo("Mis reservas ordenadas (" + u.nombre + " - " + u.cedula + ")");
 
@@ -108,5 +108,32 @@ void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& res
                   << r->total()
                   << "\n";
     }
+}
+
+void imprimirTablaHashInventarios(const HashTable& tabla){
+    titulo("Tabla hash de inventarios");
+
+    if(tabla.size() == 0){
+        std::cout << "Tabla vacia.\n";
+        return;
+    }
+
+    auto items = tabla.entries();
+    std::sort(items.begin(), items.end(), [](const auto& a, const auto& b){
+        return a.first < b.first;
+    });
+
+    for(const auto& par : items){
+        const InventarioEvento* inv = par.second;
+        if(!inv) continue;
+
+        std::cout << par.first << " -> "
+                  << "GENERAL " << inv->occGeneral << "/" << inv->capGeneral
+                  << ", TRIBUNA " << inv->occTribuna << "/" << inv->capTribuna
+                  << ", PALCO " << inv->occPalco << "/" << inv->capPalco
+                  << "\n";
+    }
+
+    std::cout << "(La tabla se reconstruye al consultar para reflejar cambios recientes.)\n";
 }
 }
