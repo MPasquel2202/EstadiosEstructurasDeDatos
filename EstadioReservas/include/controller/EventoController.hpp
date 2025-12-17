@@ -9,8 +9,8 @@
 #include "model/InventarioEvento.hpp"
 
 namespace EventoController{
-    Evento* seleccionarEvento(BinarySearchTree<Evento>& indice);
-    const Evento* seleccionarEvento(const BinarySearchTree<Evento>& indice);
+    Evento* seleccionarEvento(BinarySearchTree<Evento>& indice, LinkedList<Evento>& eventos);
+    const Evento* seleccionarEvento(const BinarySearchTree<Evento>& indice, const LinkedList<Evento>& eventos);
     Evento* buscarEventoPorIdBST(BinarySearchTree<Evento>& indice, const std::string& id);
     const Evento* buscarEventoPorIdBST(const BinarySearchTree<Evento>& indice, const std::string& id);
     bool esReservable(const Evento& e);

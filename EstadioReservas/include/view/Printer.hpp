@@ -6,6 +6,7 @@
 #include "model/Usuario.hpp"
 #include "model/InventarioEvento.hpp"
 #include "structures/HashTable.h"
+#include "structures/BinarySearchTree.h"
 #include <vector>
 #include "model/Reserva.hpp"
 
@@ -22,5 +23,6 @@ namespace Printer{
         void mostrarReservasOrdenadas(const Usuario& u, const std::vector<Reserva*>& reservas,
                                        const LinkedList<Evento>& eventos);
     void imprimirTablaHashInventarios(const HashTable& tabla);
+    void listarEventosEnOrdenBST(const BinarySearchTree<Evento>& indice);
 
 }

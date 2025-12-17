@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <vector>
+#include "utils/DateUtils.hpp"
 
 namespace Printer{
     void titulo(const std::string& t){ std::cout << "\n=== " << t << " ===\n"; }
@@ -123,17 +124,49 @@ void imprimirTablaHashInventarios(const HashTable& tabla){
         return a.first < b.first;
     });
 
+    std::cout << std::left << std::setw(12) << "Evento ID"
+              << std::setw(15) << "General"
+              << std::setw(15) << "Tribuna"
+              << std::setw(15) << "Palco" << "\n";
+    linea();
+
     for(const auto& par : items){
         const InventarioEvento* inv = par.second;
         if(!inv) continue;
 
-        std::cout << par.first << " -> "
-                  << "GENERAL " << inv->occGeneral << "/" << inv->capGeneral
-                  << ", TRIBUNA " << inv->occTribuna << "/" << inv->capTribuna
-                  << ", PALCO " << inv->occPalco << "/" << inv->capPalco
+        std::cout << std::left << std::setw(12) << par.first
+                  << std::setw(15) << (std::to_string(inv->occGeneral) + "/" + std::to_string(inv->capGeneral))
+                  << std::setw(15) << (std::to_string(inv->occTribuna) + "/" + std::to_string(inv->capTribuna))
+                  << std::setw(15) << (std::to_string(inv->occPalco) + "/" + std::to_string(inv->capPalco))
                   << "\n";
     }
 
     std::cout << "(La tabla se reconstruye al consultar para reflejar cambios recientes.)\n";
+}
+
+void listarEventosEnOrdenBST(const BinarySearchTree<Evento>& indice){
+    titulo("Eventos en BST (in-order por ID)");
+    if(indice.size() == 0){
+        std::cout << "Indice vacio.\n";
+        return;
+    }
+
+    std::cout << std::left << std::setw(10) << "ID"
+              << std::setw(28) << "Nombre"
+              << std::setw(12) << "Fecha"
+              << "Estado" << "\n";
+    linea();
+
+    Fecha hoy = DateUtils::hoy();
+    indice.inOrder([&](const BinarySearchTree<Evento>::Node& nodo){
+        const Evento* e = nodo.payload;
+        if(!e) return;
+        bool ok = DateUtils::esReservable(e->fecha, hoy);
+        std::cout << std::left << std::setw(10) << e->id
+                  << std::setw(28) << e->nombre.substr(0,27)
+                  << std::setw(12) << e->fecha.iso()
+                  << (ok ? "Reservable" : "No reservable")
+                  << "\n";
+    });
 }
 }
