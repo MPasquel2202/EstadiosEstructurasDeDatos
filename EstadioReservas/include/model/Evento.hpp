@@ -4,7 +4,8 @@
 #include <ostream>
 #include "model/Fecha.hpp"
 
-struct Evento{
+class Evento{
+public:
     std::string id;
     std::string nombre;
     Fecha fecha;
