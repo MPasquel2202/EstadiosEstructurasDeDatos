@@ -9,7 +9,8 @@
 template <typename T>
 class BinarySearchTree {
 public:
-    struct Node {
+    class Node {
+    public:
         std::string key;
         T* payload;
         Node* left;
