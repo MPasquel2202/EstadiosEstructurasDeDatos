@@ -69,12 +69,12 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Imprimir tabla hash de inventarios  [6] Filtrar eventos por fecha  [0] Cerrar sesion \n Opcion: ";
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Estructuras (BST/Hash)  [6] Filtrar eventos por fecha  [0] Cerrar sesion \n Opcion: ";
                 int opc = InputUtils::leerEnteroEnRango(0,6); // Cambiado a 6
 
                 switch(opc){
                     case 1: {
-                        Evento* evt = EventoController::seleccionarEvento(indiceEventos);
+                        Evento* evt = EventoController::seleccionarEvento(indiceEventos, eventos);
                         if(!evt) break;
                         if(!EventoController::esReservable(*evt)){
                             MenuView::noReservableYVolver();
@@ -100,7 +100,7 @@ int main(){
                         break;
                     }
                     case 3: {
-                        Evento* evt = EventoController::seleccionarEvento(indiceEventos);
+                        Evento* evt = EventoController::seleccionarEvento(indiceEventos, eventos);
                         if(!evt) break;
                         if(!EventoController::esReservable(*evt)){
                             MenuView::noReservableYVolver();
@@ -121,8 +121,25 @@ int main(){
                         break;
                     }
                     case 5: {
-                        HashTable tabla = construirTablaHashInventarios(inventarios);
-                        Printer::imprimirTablaHashInventarios(tabla);
+                        bool volverEstructuras = false;
+                        while(!volverEstructuras){
+                            std::cout << "\n[1] Listar eventos (BST en orden)  [2] Imprimir tabla hash de inventarios  [0] Volver\n Opcion: ";
+                            int optEstr = InputUtils::leerEnteroEnRango(0,2);
+                            switch(optEstr){
+                                case 1:
+                                    Printer::listarEventosEnOrdenBST(indiceEventos);
+                                    break;
+                                case 2: {
+                                    HashTable tabla = construirTablaHashInventarios(inventarios);
+                                    Printer::imprimirTablaHashInventarios(tabla);
+                                    break;
+                                }
+                                case 0:
+                                default:
+                                    volverEstructuras = true;
+                                    break;
+                            }
+                        }
                         break;
                     }
                     case 6: {

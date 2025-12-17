@@ -23,21 +23,55 @@ namespace EventoController{
         return indice.find(id);
     }
 
-    Evento* seleccionarEvento(BinarySearchTree<Evento>& indice){
+    static Evento* buscarEventoPorIdLista(LinkedList<Evento>& eventos, const std::string& id){
+        std::vector<Evento*> ordenados;
+        eventos.for_each([&](Evento& e){ ordenados.push_back(&e); });
+        if(ordenados.empty()) return nullptr;
+
+        std::sort(ordenados.begin(), ordenados.end(), [](const Evento* a, const Evento* b){ return a->id < b->id; });
+
+        int l = 0, r = static_cast<int>(ordenados.size()) - 1;
+        while(l <= r){
+            int m = l + (r - l) / 2;
+            if(ordenados[m]->id == id) return ordenados[m];
+            if(ordenados[m]->id < id) l = m + 1; else r = m - 1;
+        }
+        return nullptr;
+    }
+
+    static const Evento* buscarEventoPorIdLista(const LinkedList<Evento>& eventos, const std::string& id){
+        std::vector<const Evento*> ordenados;
+        eventos.for_each([&](const Evento& e){ ordenados.push_back(&e); });
+        if(ordenados.empty()) return nullptr;
+
+        std::sort(ordenados.begin(), ordenados.end(), [](const Evento* a, const Evento* b){ return a->id < b->id; });
+
+        int l = 0, r = static_cast<int>(ordenados.size()) - 1;
+        while(l <= r){
+            int m = l + (r - l) / 2;
+            if(ordenados[m]->id == id) return ordenados[m];
+            if(ordenados[m]->id < id) l = m + 1; else r = m - 1;
+        }
+        return nullptr;
+    }
+
+    Evento* seleccionarEvento(BinarySearchTree<Evento>& indice, LinkedList<Evento>& eventos){
         std::cout << "Ingrese ID de evento: ";
         std::string id = InputUtils::leerLineaNoVacia(1);
 
         if(auto* encontrado = buscarEventoPorIdBST(indice, id)) return encontrado;
+        if(auto* porLista = buscarEventoPorIdLista(eventos, id)) return porLista;
 
         std::cout << "Evento no encontrado.\n";
         return nullptr;
     }
 
-    const Evento* seleccionarEvento(const BinarySearchTree<Evento>& indice){
+    const Evento* seleccionarEvento(const BinarySearchTree<Evento>& indice, const LinkedList<Evento>& eventos){
         std::cout << "Ingrese ID de evento: ";
         std::string id = InputUtils::leerLineaNoVacia(1);
 
         if(auto* encontrado = buscarEventoPorIdBST(indice, id)) return encontrado;
+        if(auto* porLista = buscarEventoPorIdLista(eventos, id)) return porLista;
 
         std::cout << "Evento no encontrado.\n";
         return nullptr;
