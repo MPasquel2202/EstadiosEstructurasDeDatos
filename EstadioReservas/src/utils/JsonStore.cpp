@@ -62,6 +62,11 @@ namespace JsonStore{
     }
 
     void loadEventos(LinkedList<Evento>& out, const std::string& ruta){
+        BinarySearchTree<Evento> dummy;
+        loadEventos(out, dummy, ruta);
+    }
+
+    void loadEventos(LinkedList<Evento>& out, BinarySearchTree<Evento>& indice, const std::string& ruta){
         if(!file_exists(ruta)) return;
         std::ifstream in(ruta);
         json j; in >> j;
@@ -69,10 +74,16 @@ namespace JsonStore{
 
         for(const auto& je : j["eventos"]) {
             Evento e;
-            e.id     = je.value("id", "");
+            std::string id = je.value("id", "");
+            e.id     = id;
             e.nombre = je.value("nombre", "");
             e.fecha  = Fecha::parseISO(je.value("fecha","1970-01-01"));
             out.push_back(std::move(e));
+
+            Evento* almacenado = out.find([&](const Evento& ev){ return ev.id == id; });
+            if(almacenado){
+                indice.insert(almacenado->id, almacenado);
+            }
         }
     }
 

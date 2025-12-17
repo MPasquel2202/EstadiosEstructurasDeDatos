@@ -3,6 +3,7 @@
 #endif
 #include <locale.h>
 #include <iostream>
+#include <cstdlib>
 
 #include "ds/LinkedList.hpp"
 #include "model/Usuario.hpp"
@@ -19,6 +20,8 @@
 #include "view/Printer.hpp"
 #include "utils/OrdenamientoController.hpp"
 #include "structures/HashTable.h"
+#include "structures/BinarySearchTree.h"
+#include "utils/BSTDemo.hpp"
 
 static void guardarUsuarios(const LinkedList<Usuario>& usuarios){
     JsonStore::saveUsuarios(usuarios, "data/usuarios.json");
@@ -36,14 +39,19 @@ int main(){
 
     LinkedList<Usuario> usuarios;
     LinkedList<Evento> eventos;
+    BinarySearchTree<Evento> indiceEventos;
     LinkedList<InventarioEvento> inventarios;
 
     try{
-        JsonStore::loadEventos(eventos, "data/eventos.json");
+        JsonStore::loadEventos(eventos, indiceEventos, "data/eventos.json");
         JsonStore::loadInventarios(inventarios, "data/boletos.json");
         JsonStore::loadUsuarios(usuarios, "data/usuarios.json");
     }catch(const std::exception& e){
         std::cout << "Error cargando JSON: " << e.what() << "\n";
+    }
+
+    if(std::getenv("BST_DEMO")){
+        ejecutarDemoBST();
     }
 
     while(true){
@@ -66,7 +74,7 @@ int main(){
 
                 switch(opc){
                     case 1: {
-                        Evento* evt = EventoController::seleccionarEvento(eventos);
+                        Evento* evt = EventoController::seleccionarEvento(indiceEventos);
                         if(!evt) break;
                         if(!EventoController::esReservable(*evt)){
                             MenuView::noReservableYVolver();
@@ -92,7 +100,7 @@ int main(){
                         break;
                     }
                     case 3: {
-                        Evento* evt = EventoController::seleccionarEvento(eventos);
+                        Evento* evt = EventoController::seleccionarEvento(indiceEventos);
                         if(!evt) break;
                         if(!EventoController::esReservable(*evt)){
                             MenuView::noReservableYVolver();
