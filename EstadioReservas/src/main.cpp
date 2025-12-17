@@ -123,8 +123,8 @@ int main(){
                     case 5: {
                         bool volverEstructuras = false;
                         while(!volverEstructuras){
-                            std::cout << "\n[1] Listar eventos (BST en orden)  [2] Imprimir tabla hash de inventarios  [0] Volver\n Opcion: ";
-                            int optEstr = InputUtils::leerEnteroEnRango(0,2);
+                            std::cout << "\n[1] Listar eventos (BST en orden)  [2] Imprimir tabla hash de inventarios  [3] Imprimir tabla hash encriptada  [0] Volver\n Opcion: ";
+                            int optEstr = InputUtils::leerEnteroEnRango(0,3);
                             switch(optEstr){
                                 case 1:
                                     Printer::listarEventosEnOrdenBST(indiceEventos);
@@ -132,6 +132,11 @@ int main(){
                                 case 2: {
                                     HashTable tabla = construirTablaHashInventarios(inventarios);
                                     Printer::imprimirTablaHashInventarios(tabla);
+                                    break;
+                                }
+                                case 3: {
+                                    HashTable tabla = construirTablaHashInventarios(inventarios);
+                                    Printer::imprimirTablaHashInventariosEncriptada(tabla);
                                     break;
                                 }
                                 case 0:

@@ -3,9 +3,30 @@
 #include <iomanip>
 #include <algorithm>
 #include <vector>
+#include <cctype>
 #include "utils/DateUtils.hpp"
 
 namespace Printer{
+    namespace{
+        std::string encriptar(const std::string& texto){
+            std::string resultado;
+            resultado.reserve(texto.size());
+
+            for(char c : texto){
+                if(std::isdigit(static_cast<unsigned char>(c))){
+                    resultado.push_back('0' + (c - '0' + 3) % 10);
+                }else if(std::isalpha(static_cast<unsigned char>(c))){
+                    char base = std::islower(static_cast<unsigned char>(c)) ? 'a' : 'A';
+                    resultado.push_back(static_cast<char>(base + (c - base + 3) % 26));
+                }else{
+                    resultado.push_back(c);
+                }
+            }
+
+            return resultado;
+        }
+    }
+
     void titulo(const std::string& t){ std::cout << "\n=== " << t << " ===\n"; }
     void linea(){ std::cout << std::string(60,'-') << "\n"; }
 
@@ -142,6 +163,43 @@ void imprimirTablaHashInventarios(const HashTable& tabla){
     }
 
     std::cout << "(La tabla se reconstruye al consultar para reflejar cambios recientes.)\n";
+}
+
+void imprimirTablaHashInventariosEncriptada(const HashTable& tabla){
+    titulo("Tabla hash de inventarios (encriptada)");
+
+    if(tabla.size() == 0){
+        std::cout << "Tabla vacia.\n";
+        return;
+    }
+
+    auto items = tabla.entries();
+    std::sort(items.begin(), items.end(), [](const auto& a, const auto& b){
+        return a.first < b.first;
+    });
+
+    std::cout << std::left << std::setw(12) << "Evento ID"
+              << std::setw(15) << "General"
+              << std::setw(15) << "Tribuna"
+              << std::setw(15) << "Palco" << "\n";
+    linea();
+
+    for(const auto& par : items){
+        const InventarioEvento* inv = par.second;
+        if(!inv) continue;
+
+        std::string general = std::to_string(inv->occGeneral) + "/" + std::to_string(inv->capGeneral);
+        std::string tribuna = std::to_string(inv->occTribuna) + "/" + std::to_string(inv->capTribuna);
+        std::string palco   = std::to_string(inv->occPalco) + "/" + std::to_string(inv->capPalco);
+
+        std::cout << std::left << std::setw(12) << encriptar(par.first)
+                  << std::setw(15) << encriptar(general)
+                  << std::setw(15) << encriptar(tribuna)
+                  << std::setw(15) << encriptar(palco)
+                  << "\n";
+    }
+
+    std::cout << "(La salida muestra los campos encriptados con un desplazamiento simple.)\n";
 }
 
 void listarEventosEnOrdenBST(const BinarySearchTree<Evento>& indice){
