@@ -6,7 +6,7 @@
 #include <sstream>
 #include "utils/InputUtils.hpp"
 #include "utils/OrdenamientoController.hpp"
-#include "utils/JsonStore.hpp"
+#include "utils/MongoStore.hpp"
 #include "view/Printer.hpp"
 #include "model/Reserva.hpp"
 #include "model/Fecha.hpp"
@@ -91,7 +91,7 @@ void OrdenamientoController::ordenarLetrasNombresUsuarios() {
     try {
         // ✅ CAMBIO IMPORTANTE: Recargar usuarios CADA VEZ que se ejecuta
         LinkedList<Usuario> usuarios;
-        JsonStore::loadUsuarios(usuarios, "data/usuarios.json");
+        MongoStore::loadUsuarios(usuarios);
         
         if (usuarios.size() == 0) {
             std::cout << "No hay usuarios registrados.\n";

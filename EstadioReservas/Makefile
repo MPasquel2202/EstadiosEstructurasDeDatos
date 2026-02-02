@@ -4,6 +4,12 @@ INCLUDES = -Iinclude
 SRC_DIR = src
 BIN = estadio
 
+MONGO_CFLAGS := $(shell pkg-config --cflags libmongocxx 2>/dev/null)
+MONGO_LIBS := $(shell pkg-config --libs libmongocxx 2>/dev/null)
+
+CPPFLAGS := $(MONGO_CFLAGS)
+LDFLAGS := $(MONGO_LIBS)
+
 SRCS = \
   $(SRC_DIR)/main.cpp \
   $(SRC_DIR)/model/Fecha.cpp \
@@ -18,7 +24,8 @@ SRCS = \
   $(SRC_DIR)/controller/ReservaController.cpp \
   $(SRC_DIR)/utils/CedulaEC.cpp \
   $(SRC_DIR)/utils/DateUtils.cpp \
-  $(SRC_DIR)/utils/JsonStore.cpp \
+  $(SRC_DIR)/utils/MongoConnection.cpp \
+  $(SRC_DIR)/utils/MongoStore.cpp \
   $(SRC_DIR)/utils/InputUtils.cpp \
   $(SRC_DIR)/utils/OrdenamientoController.cpp \
   $(SRC_DIR)/utils/BSTDemo.cpp \
@@ -27,15 +34,13 @@ SRCS = \
 
 OBJS = $(SRCS:.cpp=.o)
 
-JSON_HEADER = include/nlohmann/json.hpp
-
-all: check-json $(BIN)
+all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
 
 run: all
 	./$(BIN)
@@ -43,14 +48,4 @@ run: all
 clean:
 	rm -f $(OBJS) $(BIN)
 
-check-json:
-	@if [ ! -f "$(JSON_HEADER)" ]; then \
-		echo ">> json.hpp no encontrado. Intentando descargar..."; \
-		bash ./scripts/fetch_json.sh || true; \
-	fi
-	@if [ ! -f "$(JSON_HEADER)" ]; then \
-		echo "ERROR: Falta include/nlohmann/json.hpp. Ejecuta scripts/fetch_json.sh (Linux/macOS) o scripts/fetch_json.ps1 (Windows)"; \
-		exit 1; \
-	fi
-
-.PHONY: all run clean check-json
+.PHONY: all run clean
