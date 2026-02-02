@@ -7,22 +7,19 @@ Aplicacion de consola en C++17 que gestiona reservas de boletos para eventos
 en un estadio. Se basa en un modelo MVC: los modelos describen eventos,
 usuarios y reservas; los controladores coordinan la logica; las vistas
 generan las salidas en texto; y los utilitarios aportan estructuras de datos
-propias, ordenamiento y persistencia en JSON.
+propias, ordenamiento y persistencia en MongoDB.
 
 2. Archivos de entrada, salida y compilacion
 --------------------------------------------
-- `Makefile`: compila el ejecutable `estadio` (o `estadio.exe` en Windows) y
-  descarga automaticamente `include/nlohmann/json.hpp` si falta.
-- `data/eventos.json`, `data/boletos.json`, `data/usuarios.json`: semillas de
-datos para eventos, inventarios y usuarios.
-- `scripts/fetch_json.sh` y `scripts/fetch_json.ps1`: descargan la cabecera de
-  nlohmann/json en Linux/macOS o Windows.
+- `Makefile`: compila el ejecutable `estadio` (o `estadio.exe` en Windows).
+- `data/eventos.json`, `data/boletos.json`, `data/usuarios.json`: datos de
+  ejemplo que pueden servir para poblar la base de datos externamente.
 - `estadio` / `estadio.exe`: binarios generados tras la compilacion.
 
 3. Punto de entrada y flujo principal
 -------------------------------------
 - `src/main.cpp`: inicializa las listas ligadas de usuarios, eventos e
-  inventarios; carga datos desde JSON; construye un indice BST de eventos; y
+  inventarios; carga datos desde MongoDB; construye un indice BST de eventos; y
   ejecuta el bucle de sesion que incluye login, listado de eventos, reserva,
   cancelacion, filtros por fecha, menus de ordenamiento y vistas de
   estructuras (BST y tabla hash). Gestiona las excepciones de entrada y de
@@ -63,7 +60,7 @@ datos para eventos, inventarios y usuarios.
 -----------------------------------------------------------
 - `AuthController`: ejecuta el login por cedula y nombre. Valida la cedula
   ecuatoriana, usa quicksort y busqueda binaria sobre punteros a usuarios
-  cargados, permite registrar usuarios nuevos y persiste el JSON.
+  cargados, permite registrar usuarios nuevos y persiste los cambios en MongoDB.
 - `EventoController`: encapsula reglas sobre eventos. Comprueba si una fecha
   es reservable, selecciona eventos por ID usando BST o listas ordenadas,
   localiza inventarios, filtra por fecha y busca coincidencias con busquedas
@@ -89,8 +86,10 @@ datos para eventos, inventarios y usuarios.
 
 8. Utilitarios (`include/utils/` + `src/utils/`)
 -----------------------------------------------
-- `JsonStore`: lectura y escritura de eventos, inventarios y usuarios en JSON,
-  poblando las listas y el indice BST.
+- `MongoConnection`: crea clientes configurables para MongoDB desde variables
+  de entorno.
+- `MongoStore`: lectura y escritura de eventos, inventarios y usuarios en
+  MongoDB, poblando las listas y el indice BST.
 - `DateUtils`: fabrica la fecha actual, parsea ISO y decide si un evento es
   reservable comparando fechas.
 - `InputUtils`: validaciones de entrada por consola (lineas no vacias,
@@ -114,26 +113,23 @@ datos para eventos, inventarios y usuarios.
 
 9. Datos y recursos adicionales
 -------------------------------
-- `data/`: archiva los JSON semilla que permiten reproducir eventos, usuarios
-  e inventarios de forma rapida al iniciar la aplicacion.
+- `data/`: archiva JSONs de ejemplo para poblar eventos, usuarios e inventarios
+  si se desea cargar la base de datos manualmente.
 - `README.md`: resume requisitos, instrucciones de compilacion y notas de uso.
-- `Makefile` y `scripts/`: automatizan la descarga de dependencias y la
-  compilacion en entornos Unix y Windows.
+- `Makefile`: automatiza la compilacion en entornos Unix y Windows.
 
 10. Estructura general del repositorio
 --------------------------------------
 - `include/`: cabeceras de modelos, estructuras de datos, controladores,
-  vistas y utilitarios (incluida la dependencia `nlohmann/json.hpp`).
+  vistas y utilitarios.
 - `src/`: implementaciones en C++17 de cada componente.
-- `data/`: archivos JSON de configuracion inicial.
-- `scripts/`: utilidades para preparar dependencias.
+- `data/`: archivos JSON de ejemplo.
 - `estadio` / `estadio.exe`: ejecutables generados.
 
 11. Flujos clave de la aplicacion
 ---------------------------------
-- Inicio: lectura de JSON y construccion del indice BST de eventos.
+- Inicio: lectura desde MongoDB y construccion del indice BST de eventos.
 - Sesion: login/registro, listado de eventos filtrando reservables, menu de
   reservas y cancelaciones con actualizacion de inventarios y persistencia.
 - Herramientas: menus de ordenamiento (eventos o reservas), vistas de
   estructuras (BST y tabla hash) y filtros por fecha.
-
