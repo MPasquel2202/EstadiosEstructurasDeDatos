@@ -1,9 +1,10 @@
 
-# Estadio Reservas C++ (C++17, consola, MVC+Utils, JSON, listas circulares)
+# Estadio Reservas C++ (C++17, consola, MVC+Utils, MongoDB, listas circulares)
 
 ## Requisitos
 - g++ (C++17)
-- curl o wget (solo para descargar `json.hpp` automáticamente)
+- MongoDB (servidor accesible)
+- MongoDB C++ Driver (`mongocxx` / `bsoncxx`)
 
 ## Compilación
 ```bash
@@ -11,22 +12,23 @@ make
 ./estadio
 ```
 
-> El `Makefile` intentará descargar `include/nlohmann/json.hpp` si no existe (Linux/macOS).  
-> En Windows, ejecuta:
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/fetch_json.ps1
-```
-y luego:
-```powershell
-make
-.\estadio.exe
+> El `Makefile` usa `pkg-config` para detectar las banderas de `libmongocxx`.
+
+## Configuración de conexión
+La conexión se parametriza con variables de entorno:
+- `MONGO_URI` (por defecto: `mongodb://localhost:27017`)
+- `MONGO_DB` (por defecto: `estadio_reservas`)
+
+Ejemplo:
+```bash
+export MONGO_URI="mongodb+srv://usuario:clave@mi-cluster.mongodb.net"
+export MONGO_DB="estadio_reservas"
+./estadio
 ```
 
 ## Estructura
 - `include/` headers (MVC + Utils + Estructuras de datos propias)
 - `src/` fuentes
-- `data/` JSON semilla (`eventos.json`, `boletos.json`, `usuarios.json`)
-- `scripts/fetch_json.*` descarga la cabecera de nlohmann/json
 - `Makefile`
 
 ## Notas

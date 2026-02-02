@@ -12,7 +12,7 @@
 #include "controller/AuthController.hpp"
 #include "controller/EventoController.hpp"
 #include "controller/ReservaController.hpp"
-#include "utils/JsonStore.hpp"
+#include "utils/MongoStore.hpp"
 #include "utils/DateUtils.hpp"
 #include "utils/Exceptions.hpp"
 #include "utils/InputUtils.hpp"
@@ -24,10 +24,10 @@
 #include "utils/BSTDemo.hpp"
 
 static void guardarUsuarios(const LinkedList<Usuario>& usuarios){
-    JsonStore::saveUsuarios(usuarios, "data/usuarios.json");
+    MongoStore::saveUsuarios(usuarios);
 }
 static void guardarInventarios(const LinkedList<InventarioEvento>& invs){
-    JsonStore::saveInventarios(invs, "data/boletos.json");
+    MongoStore::saveInventarios(invs);
 }
 
 int main(){
@@ -43,11 +43,20 @@ int main(){
     LinkedList<InventarioEvento> inventarios;
 
     try{
-        JsonStore::loadEventos(eventos, indiceEventos, "data/eventos.json");
-        JsonStore::loadInventarios(inventarios, "data/boletos.json");
-        JsonStore::loadUsuarios(usuarios, "data/usuarios.json");
+        MongoStore::loadEventos(eventos, indiceEventos);
+        MongoStore::loadInventarios(inventarios);
+        MongoStore::loadUsuarios(usuarios);
     }catch(const std::exception& e){
-        std::cout << "Error cargando JSON: " << e.what() << "\n";
+        std::cout << "Error cargando MongoDB: " << e.what() << "\n";
+    }
+
+    auto alertas = MongoStore::validarIntegridad(usuarios, eventos, inventarios);
+    if(!alertas.empty()){
+        std::cout << "\n== Advertencias de integridad de datos ==\n";
+        for(const auto& alerta : alertas){
+            std::cout << " - " << alerta << "\n";
+        }
+        std::cout << "=======================================\n\n";
     }
 
     if(std::getenv("BST_DEMO")){

@@ -1,7 +1,7 @@
 #include "controller/AuthController.hpp"
 #include "utils/CedulaEC.hpp"
 #include "utils/InputUtils.hpp"
-#include "utils/JsonStore.hpp"
+#include "utils/MongoStore.hpp"
 #include "view/MenuView.hpp"
 #include "utils/Exceptions.hpp"
 #include <iostream>
@@ -65,7 +65,7 @@ namespace AuthController{
 
             usuarios.push_back(std::move(nu)); 
 
-            JsonStore::saveUsuarios(usuarios, "data/usuarios.json");
+            MongoStore::saveUsuarios(usuarios);
 
             std::cout << "Usuario registrado. Bienvenido/a, " << nom << "\n";
             // Devolver puntero al usuario recién insertado (buscamos con el mismo método por simplicidad)
