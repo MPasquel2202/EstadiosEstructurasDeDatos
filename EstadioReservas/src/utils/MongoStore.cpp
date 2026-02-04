@@ -40,10 +40,13 @@ namespace MongoStore {
 
 Store::Store(MongoConnection::Config config)
     : client_(MongoConnection::createClient(config)),
-      db_(client_[config.database]) {}
+      dbUsuarios_(client_[config.databaseUsuarios]),
+      dbEventos_(client_[config.databaseEventos]),
+      dbBoletos_(client_[config.databaseBoletos]),
+      collection_(config.collection) {}
 
 void Store::loadUsuarios(LinkedList<Usuario>& out) const {
-    auto collection = db_["usuarios"];
+    auto collection = dbUsuarios_[collection_];
     auto cursor = collection.find({});
     for (const auto& doc : cursor) {
         Usuario u;
@@ -69,7 +72,7 @@ void Store::loadUsuarios(LinkedList<Usuario>& out) const {
 }
 
 void Store::saveUsuarios(const LinkedList<Usuario>& in) const {
-    auto collection = db_["usuarios"];
+    auto collection = dbUsuarios_[collection_];
     collection.delete_many({});
 
     in.for_each([&](const Usuario& u) {
@@ -93,7 +96,7 @@ void Store::saveUsuarios(const LinkedList<Usuario>& in) const {
 }
 
 void Store::loadEventos(LinkedList<Evento>& out, BinarySearchTree<Evento>& indice) const {
-    auto collection = db_["eventos"];
+    auto collection = dbEventos_[collection_];
     auto cursor = collection.find({});
     for (const auto& doc : cursor) {
         Evento e;
@@ -112,7 +115,7 @@ void Store::loadEventos(LinkedList<Evento>& out, BinarySearchTree<Evento>& indic
 }
 
 void Store::loadInventarios(LinkedList<InventarioEvento>& out) const {
-    auto collection = db_["inventarios"];
+    auto collection = dbBoletos_[collection_];
     auto cursor = collection.find({});
     for (const auto& doc : cursor) {
         InventarioEvento inv;
@@ -140,7 +143,7 @@ void Store::loadInventarios(LinkedList<InventarioEvento>& out) const {
 }
 
 void Store::saveInventarios(const LinkedList<InventarioEvento>& in) const {
-    auto collection = db_["inventarios"];
+    auto collection = dbBoletos_[collection_];
     collection.delete_many({});
 
     in.for_each([&](const InventarioEvento& inv) {

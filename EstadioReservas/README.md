@@ -17,12 +17,18 @@ make
 ## Configuración de conexión
 La conexión se parametriza con variables de entorno:
 - `MONGO_URI` (por defecto: `mongodb://localhost:27017`)
-- `MONGO_DB` (por defecto: `estadio_reservas`)
+- `MONGO_DB_USUARIOS` (por defecto: `usuarios`)
+- `MONGO_DB_EVENTOS` (por defecto: `eventos`)
+- `MONGO_DB_BOLETOS` (por defecto: `boletos`)
+- `MONGO_COLLECTION` (por defecto: `EstadioReservas`)
 
 Ejemplo:
 ```bash
 export MONGO_URI="mongodb+srv://usuario:clave@mi-cluster.mongodb.net"
-export MONGO_DB="estadio_reservas"
+export MONGO_DB_USUARIOS="usuarios"
+export MONGO_DB_EVENTOS="eventos"
+export MONGO_DB_BOLETOS="boletos"
+export MONGO_COLLECTION="EstadioReservas"
 ./estadio
 ```
 

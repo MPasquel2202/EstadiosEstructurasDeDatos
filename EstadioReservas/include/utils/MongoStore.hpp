@@ -25,7 +25,10 @@ public:
 
 private:
     mongocxx::client client_;
-    mongocxx::database db_;
+    mongocxx::database dbUsuarios_;
+    mongocxx::database dbEventos_;
+    mongocxx::database dbBoletos_;
+    std::string collection_;
 };
 
 Store& defaultStore();

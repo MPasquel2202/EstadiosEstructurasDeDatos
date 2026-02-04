@@ -87,9 +87,11 @@ propias, ordenamiento y persistencia en MongoDB.
 8. Utilitarios (`include/utils/` + `src/utils/`)
 -----------------------------------------------
 - `MongoConnection`: crea clientes configurables para MongoDB desde variables
-  de entorno.
+  de entorno, con bases separadas para usuarios, eventos y boletos y una
+  colección compartida `EstadioReservas`.
 - `MongoStore`: lectura y escritura de eventos, inventarios y usuarios en
-  MongoDB, poblando las listas y el indice BST.
+  MongoDB (colección `EstadioReservas` en las bases `usuarios`, `eventos` y
+  `boletos`), poblando las listas y el indice BST.
 - `DateUtils`: fabrica la fecha actual, parsea ISO y decide si un evento es
   reservable comparando fechas.
 - `InputUtils`: validaciones de entrada por consola (lineas no vacias,

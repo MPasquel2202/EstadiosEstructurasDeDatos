@@ -1,0 +1,66 @@
+INSTALACION Y CONFIGURACION - EstadioReservas
+============================================
+
+Requisitos
+----------
+1) Compilador C++17 (g++ o clang++).
+2) Make.
+3) pkg-config.
+4) MongoDB C++ Driver (libmongocxx + libbsoncxx).
+5) Acceso a un clúster MongoDB.
+
+Ejemplo de instalación en Ubuntu/Debian
+---------------------------------------
+1) Herramientas base:
+   sudo apt-get update
+   sudo apt-get install -y build-essential cmake pkg-config
+
+2) Driver MongoDB C++ (libmongocxx/bsoncxx):
+   - Seguir la guía oficial de MongoDB para tu distribución.
+   - En Ubuntu, normalmente se instala vía paquetes o compilación desde fuente.
+   - Verifica que `pkg-config --libs libmongocxx` responda sin error.
+
+Configuración de conexión
+-------------------------
+Este proyecto usa 3 bases y una colección compartida:
+- Base de datos de usuarios: usuarios
+- Base de datos de eventos: eventos
+- Base de datos de boletos/inventarios: boletos
+- Colección (común): EstadioReservas
+
+Variables de entorno:
+- MONGO_URI
+- MONGO_DB_USUARIOS
+- MONGO_DB_EVENTOS
+- MONGO_DB_BOLETOS
+- MONGO_COLLECTION
+
+Ejemplo con el string proporcionado:
+export MONGO_URI="mongodb+srv://mpasquel:mpasquel@cluster0.oe5pvv7.mongodb.net/"
+export MONGO_DB_USUARIOS="usuarios"
+export MONGO_DB_EVENTOS="eventos"
+export MONGO_DB_BOLETOS="boletos"
+export MONGO_COLLECTION="EstadioReservas"
+
+Paso a paso para configurar y ejecutar
+--------------------------------------
+1) Abre una terminal y ubícate en la carpeta del proyecto:
+   cd /workspace/EstadiosEstructurasDeDatos/EstadioReservas
+
+2) Exporta las variables de entorno (usa el ejemplo anterior).
+
+3) Compila:
+   make
+
+4) Ejecuta:
+   ./estadio
+
+5) Verifica que tus bases de datos tengan la colección "EstadioReservas" con
+   documentos para usuarios, eventos e inventarios según el modelo.
+
+Notas
+-----
+- Si las colecciones están vacías, el sistema mostrará listas vacías hasta que
+  agregues documentos de ejemplo.
+- El código asume estructuras compatibles con los modelos Usuario, Evento e
+  InventarioEvento (campos: cedula, nombre, reservas, fecha, etc.).

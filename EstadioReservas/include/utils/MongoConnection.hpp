@@ -8,7 +8,10 @@ namespace MongoConnection {
 
 struct Config {
     std::string uri;
-    std::string database;
+    std::string databaseUsuarios;
+    std::string databaseEventos;
+    std::string databaseBoletos;
+    std::string collection;
 };
 
 Config fromEnvironment();
