@@ -77,6 +77,11 @@ datos para eventos, inventarios y usuarios.
   asientos disponibles. Incluye un flujo adicional para ordenar letras de los
   nombres de usuarios y un submenu para ordenar reservas de un usuario por
   fecha, nombre de evento o total de boletos.
+- `EstrategiasController`: menu educativo de estrategias de diseno de
+  algoritmos. Ofrece ejemplos funcionales de programacion exhaustiva, divide
+  y venceras, voraz, programacion dinamica y backtracking, reutilizando los
+  eventos, inventarios y usuarios cargados. Cuando no hay datos reales,
+  inyecta datos de ejemplo para demostrar cada tecnica.
 
 7. Vistas (`include/view/` + `src/view/`)
 -----------------------------------------
@@ -116,6 +121,9 @@ datos para eventos, inventarios y usuarios.
 -------------------------------
 - `data/`: archiva los JSON semilla que permiten reproducir eventos, usuarios
   e inventarios de forma rapida al iniciar la aplicacion.
+- El menu de estrategias incluye datasets de ejemplo embebidos (eventos,
+  nombres de usuarios, paquetes de cupos) para que los flujos educativos
+  funcionen incluso si no hay datos cargados.
 - `README.md`: resume requisitos, instrucciones de compilacion y notas de uso.
 - `Makefile` y `scripts/`: automatizan la descarga de dependencias y la
   compilacion en entornos Unix y Windows.
@@ -135,5 +143,5 @@ datos para eventos, inventarios y usuarios.
 - Sesion: login/registro, listado de eventos filtrando reservables, menu de
   reservas y cancelaciones con actualizacion de inventarios y persistencia.
 - Herramientas: menus de ordenamiento (eventos o reservas), vistas de
-  estructuras (BST y tabla hash) y filtros por fecha.
-
+  estructuras (BST y tabla hash), filtros por fecha y menu educativo de
+  estrategias de diseno con ejemplos guiados.
