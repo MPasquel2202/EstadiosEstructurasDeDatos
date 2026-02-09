@@ -67,7 +67,7 @@ namespace JsonStore{
                         if(!is_non_negative_int(jr, "GENERAL")
                            || !is_non_negative_int(jr, "TRIBUNA")
                            || !is_non_negative_int(jr, "PALCO")){
-                            error = "Reserva invalida: cantidades negativas.";
+                            error = "Reserva invalida: cantidades negativas (eventoId='" + jr.value("eventoId", "") + "').";
                             return false;
                         }
                     }
@@ -137,12 +137,14 @@ namespace JsonStore{
                     return false;
                 }
                 if(!is_positive_int(ji, "limitePorUsuario")){
-                    error = "Inventario invalido: limitePorUsuario debe ser positivo.";
+                    error = "Inventario invalido: limitePorUsuario debe ser positivo (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(!ji.contains("capacidad") || !ji["capacidad"].is_object()
                    || !ji.contains("ocupados") || !ji["ocupados"].is_object()){
-                    error = "Inventario invalido: capacidad/ocupados requeridos.";
+                    error = "Inventario invalido: capacidad/ocupados requeridos (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
                 const auto& cap = ji["capacidad"];
@@ -150,19 +152,20 @@ namespace JsonStore{
                 if(!is_non_negative_int(cap, "GENERAL")
                    || !is_non_negative_int(cap, "TRIBUNA")
                    || !is_non_negative_int(cap, "PALCO")){
-                    error = "Inventario invalido: capacidades negativas.";
+                    error = "Inventario invalido: capacidades negativas (eventoId='" + ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(!is_non_negative_int(occ, "GENERAL")
                    || !is_non_negative_int(occ, "TRIBUNA")
                    || !is_non_negative_int(occ, "PALCO")){
-                    error = "Inventario invalido: ocupados negativos.";
+                    error = "Inventario invalido: ocupados negativos (eventoId='" + ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(occ["GENERAL"].get<int>() > cap["GENERAL"].get<int>()
                    || occ["TRIBUNA"].get<int>() > cap["TRIBUNA"].get<int>()
                    || occ["PALCO"].get<int>() > cap["PALCO"].get<int>()){
-                    error = "Inventario invalido: ocupados exceden capacidad.";
+                    error = "Inventario invalido: ocupados exceden capacidad (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
             }
