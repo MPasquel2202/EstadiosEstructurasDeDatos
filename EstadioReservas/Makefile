@@ -30,7 +30,7 @@ OBJS = $(SRCS:.cpp=.o)
 
 JSON_HEADER = include/nlohmann/json.hpp
 
-all: check-json $(BIN)
+all: check-json libDLLBigO.so $(BIN)
 
 $(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
@@ -38,11 +38,14 @@ $(BIN): $(OBJS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
+libDLLBigO.so:
+	$(CXX) -shared -fPIC -o libDLLBigO.so DLLBigO/DLLBigO/dllmain.cpp
+
 run: all
 	./$(BIN)
 
 clean:
-	rm -f $(OBJS) $(BIN)
+	rm -f $(OBJS) $(BIN) libDLLBigO.so
 
 check-json:
 	@if [ ! -f "$(JSON_HEADER)" ]; then \

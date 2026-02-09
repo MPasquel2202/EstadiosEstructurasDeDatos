@@ -13,9 +13,9 @@ public:
     
     static void mostrarMenuOrdenamientoReservas(Usuario& usuario,
                                                const LinkedList<Evento>& eventos);
-    
-    // NUEVAS FUNCIONES AGREGADAS
+
     static void ordenarLetrasNombresUsuarios();
+    static void mostrarGraficaBigO();
     
 private:
     static void aplicarOrdenamiento(OrdenadorEventos<Evento>& ordenador,

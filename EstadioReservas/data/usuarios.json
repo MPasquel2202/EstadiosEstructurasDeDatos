@@ -2,7 +2,7 @@
   "usuarios": [
     {
       "cedula": "1710034065",
-      "nombre": "JuanPerez",
+      "nombre": "Juan Perez",
       "reservas": [
         {
           "GENERAL": 2,
@@ -26,7 +26,7 @@
     },
     {
       "cedula": "0400878021",
-      "nombre": "Marlon Pasquel ",
+      "nombre": "Marlon Pasquel",
       "reservas": [
         {
           "GENERAL": 1,
@@ -62,12 +62,12 @@
     },
     {
       "cedula": "0801481029",
-      "nombre": "              k  l",
+      "nombre": "Kevin Lopez",
       "reservas": []
     },
     {
       "cedula": "1004259444",
-      "nombre": "Roberto",
+      "nombre": "Roberto Gomez",
       "reservas": [
         {
           "GENERAL": 2,
