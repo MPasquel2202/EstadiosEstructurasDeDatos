@@ -19,6 +19,7 @@
 #include "view/MenuView.hpp"
 #include "view/Printer.hpp"
 #include "utils/OrdenamientoController.hpp"
+#include "utils/EstrategiasController.hpp"
 #include "structures/HashTable.h"
 #include "structures/BinarySearchTree.h"
 #include "utils/BSTDemo.hpp"
@@ -75,8 +76,8 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Estructuras (BST/Hash)  [6] Filtrar eventos por fecha  [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,6); // Cambiado a 6
+                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Estructuras (BST/Hash)  [6] Filtrar eventos por fecha  [7] Estrategias de diseno  [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,7);
 
                 switch(opc){
                     case 1: {
@@ -155,6 +156,10 @@ int main(){
                     }
                     case 6: {
                         EventoController::filtrarPorFecha(eventos, inventarios);
+                        break;
+                    }
+                    case 7: {
+                        EstrategiasController::mostrarMenuEstrategias(eventos, inventarios, usuarios);
                         break;
                     }
                     case 0:
