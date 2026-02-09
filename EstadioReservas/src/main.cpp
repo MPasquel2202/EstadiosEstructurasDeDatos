@@ -42,6 +42,12 @@ int main(){
     BinarySearchTree<Evento> indiceEventos;
     LinkedList<InventarioEvento> inventarios;
 
+    std::string errorDatos;
+    if(!JsonStore::validarDatos("data/usuarios.json", "data/eventos.json", "data/boletos.json", errorDatos)){
+        std::cout << "Datos invalidos: " << errorDatos << "\n";
+        return 1;
+    }
+
     try{
         JsonStore::loadEventos(eventos, indiceEventos, "data/eventos.json");
         JsonStore::loadInventarios(inventarios, "data/boletos.json");
