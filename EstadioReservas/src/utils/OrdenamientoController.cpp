@@ -4,10 +4,8 @@
 #include <cctype>
 #include <fstream>
 #include <sstream>
-#include <dlfcn.h> 
 #include <cstdlib>  
 #include <iostream>  
-#include <unistd.h>  
 #include "utils/InputUtils.hpp"
 #include "utils/OrdenamientoController.hpp"
 #include "utils/JsonStore.hpp"
@@ -15,12 +13,6 @@
 #include "model/Reserva.hpp"
 #include "model/Fecha.hpp"
 #include "model/Usuario.hpp"
-
-typedef void (*BigO_Start_Fn)(int);
-typedef void (*BigO_Stop_Fn)();
-typedef void (*BigO_Clear_Fn)();
-typedef void (*BigO_Export_Fn)(const char*);
-
 
 void OrdenamientoController::mostrarMenuOrdenamiento(LinkedList<Evento>& eventos, 
                                                    LinkedList<InventarioEvento>& inventarios) {
@@ -437,63 +429,3 @@ void OrdenamientoController::mostrarMenuOrdenamientoReservas(Usuario& usuario,
 }
 
 
-void OrdenamientoController::mostrarGraficaBigO() {
-    std::cout << "   ANALISIS DE RENDIMIENTO (LINUX / .SO)\n";
-
-    void* handle = dlopen("./libDLLBigO.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "[ERROR] No se pudo cargar 'libDLLBigO.so'.\n";
-        std::cerr << "Detalle: " << dlerror() << "\n";
-        std::cerr << "Asegurate de compilar la libreria como .so y ponerla junto al ejecutable.\n";
-        std::cout << "Presione ENTER para volver...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    dlerror();
-
-    BigO_Start_Fn BigO_Start;
-    *(void **) (&BigO_Start) = dlsym(handle, "BigO_Start");
-
-    BigO_Stop_Fn BigO_Stop;
-    *(void **) (&BigO_Stop) = dlsym(handle, "BigO_Stop");
-
-    BigO_Clear_Fn BigO_Clear;
-    *(void **) (&BigO_Clear) = dlsym(handle, "BigO_Clear");
-
-    BigO_Export_Fn BigO_Export;
-    *(void **) (&BigO_Export) = dlsym(handle, "BigO_ExportMatlabScript");
-    const char* dlsym_error = dlerror();
-    if (dlsym_error) {
-        std::cerr << "[ERROR] Fallo al cargar simbolos: " << dlsym_error << "\n";
-        dlclose(handle);
-        return;
-    }
-    std::cout << "Libreria cargada. Iniciando pruebas con Arreglos Dinamicos...\n";
-    BigO_Clear();
-
-    for (int n = 100; n <= 2000; n += 200) {
-        
-        int* arregloDinamico = new int[n];
-
-        for (int i = 0; i < n; i++) {
-            *(arregloDinamico + i) = rand(); // Aritmética de punteros
-        }
-        BigO_Start(n);
-
-        std::sort(arregloDinamico, arregloDinamico + n);
-
-        BigO_Stop();
-
-        delete[] arregloDinamico;
-
-        std::cout << " -> N=" << n << " procesado.\n";
-    }
-    BigO_Export("grafica_ordenamiento.m");
-    std::cout << "\n[EXITO] Script generado: 'grafica_ordenamiento.m'\n";
-    dlclose(handle);
-    
-    std::cout << "Presione ENTER para continuar...";
-    std::cin.ignore();
-    std::cin.get();
-}

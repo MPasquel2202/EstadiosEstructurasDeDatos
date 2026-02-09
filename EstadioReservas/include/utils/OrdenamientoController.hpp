@@ -15,7 +15,6 @@ public:
                                                const LinkedList<Evento>& eventos);
 
     static void ordenarLetrasNombresUsuarios();
-    static void mostrarGraficaBigO();
     
 private:
     static void aplicarOrdenamiento(OrdenadorEventos<Evento>& ordenador,

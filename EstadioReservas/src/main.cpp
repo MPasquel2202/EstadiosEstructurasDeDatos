@@ -78,8 +78,8 @@ int main(){
 
                 std::cout << "\n[1] Reservar  [2] Listar reservas  [3] Menu Ordenamiento  [4] Cancelar reserva ";
                 std::cout << "\n[5] Ordenar Nombres  [6] Estructuras (BST/Hash)  [7] Filtrar eventos por fecha  ";
-                std::cout << "\n[8] Estrategias de diseno [9] Grafica Comlejidad [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,9);
+                std::cout << "\n[8] Estrategias de diseno [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,8);
 
                 switch(opc){
                     case 1: {
@@ -166,10 +166,6 @@ int main(){
                     }
                     case 8: {
                         EstrategiasController::mostrarMenuEstrategias(eventos, inventarios, usuarios);
-                        break;
-                    }
-                    case 9: {
-                        OrdenamientoController::mostrarGraficaBigO();
                         break;
                     }
                     case 0:
