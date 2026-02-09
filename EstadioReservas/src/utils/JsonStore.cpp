@@ -1,5 +1,8 @@
 #include "utils/JsonStore.hpp"
 #include "nlohmann/json.hpp"
+#include "utils/CedulaEC.hpp"
+#include "utils/InputUtils.hpp"
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <utility>
@@ -7,8 +10,14 @@
 using nlohmann::json;
 
 static bool file_exists(const std::string& p){ std::ifstream f(p); return f.good(); }
-static bool is_non_empty_string(const json& j, const char* key){
-    return j.contains(key) && j[key].is_string() && !j[key].get<std::string>().empty();
+static bool is_non_blank_string(const json& j, const char* key){
+    if(!j.contains(key) || !j[key].is_string()) return false;
+    const std::string value = j[key].get<std::string>();
+    if(value.empty()) return false;
+    for(char c : value){
+        if(!std::isspace(static_cast<unsigned char>(c))) return true;
+    }
+    return false;
 }
 
 static bool is_non_negative_int(const json& j, const char* key){
@@ -33,8 +42,17 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& ju : j["usuarios"]){
-                if(!is_non_empty_string(ju, "cedula") || !is_non_empty_string(ju, "nombre")){
-                    error = "Usuario invalido: cedula/nombre requeridos.";
+                if(!is_non_blank_string(ju, "cedula") || !is_non_blank_string(ju, "nombre")){
+                    error = "Usuario invalido: cedula/nombre requeridos (cedula='" + ju.value("cedula", "") +
+                            "', nombre='" + ju.value("nombre", "") + "').";
+                    return false;
+                }
+                if(!CedulaEC::validar(ju.value("cedula", ""))){
+                    error = "Usuario invalido: cedula no valida ('" + ju.value("cedula", "") + "').";
+                    return false;
+                }
+                if(!InputUtils::nombreValido(ju.value("nombre", ""))){
+                    error = "Usuario invalido: nombre no valida ('" + ju.value("nombre", "") + "').";
                     return false;
                 }
                 if(ju.contains("reservas")){
@@ -43,14 +61,14 @@ namespace JsonStore{
                         return false;
                     }
                     for(const auto& jr : ju["reservas"]){
-                        if(!is_non_empty_string(jr, "eventoId")){
-                            error = "Reserva invalida: eventoId requerido.";
+                        if(!is_non_blank_string(jr, "eventoId")){
+                            error = "Reserva invalida: eventoId requerido (eventoId='" + jr.value("eventoId", "") + "').";
                             return false;
                         }
                         if(!is_non_negative_int(jr, "GENERAL")
                            || !is_non_negative_int(jr, "TRIBUNA")
                            || !is_non_negative_int(jr, "PALCO")){
-                            error = "Reserva invalida: cantidades negativas.";
+                            error = "Reserva invalida: cantidades negativas (eventoId='" + jr.value("eventoId", "") + "').";
                             return false;
                         }
                     }
@@ -76,12 +94,17 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& je : j["eventos"]){
-                if(!is_non_empty_string(je, "id") || !is_non_empty_string(je, "nombre")){
-                    error = "Evento invalido: id/nombre requeridos.";
+                if(!is_non_blank_string(je, "id") || !is_non_blank_string(je, "nombre")){
+                    error = "Evento invalido: id/nombre requeridos (id='" + je.value("id", "") +
+                            "', nombre='" + je.value("nombre", "") + "').";
                     return false;
                 }
-                if(!is_non_empty_string(je, "fecha")){
-                    error = "Evento invalido: fecha requerida.";
+                if(!InputUtils::nombreValido(je.value("nombre", ""))){
+                    error = "Evento invalido: nombre no valida ('" + je.value("nombre", "") + "').";
+                    return false;
+                }
+                if(!is_non_blank_string(je, "fecha")){
+                    error = "Evento invalido: fecha requerida (id='" + je.value("id", "") + "').";
                     return false;
                 }
                 try{
@@ -111,17 +134,19 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& ji : j["inventarios"]){
-                if(!is_non_empty_string(ji, "eventoId")){
-                    error = "Inventario invalido: eventoId requerido.";
+                if(!is_non_blank_string(ji, "eventoId")){
+                    error = "Inventario invalido: eventoId requerido (eventoId='" + ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(!is_positive_int(ji, "limitePorUsuario")){
-                    error = "Inventario invalido: limitePorUsuario debe ser positivo.";
+                    error = "Inventario invalido: limitePorUsuario debe ser positivo (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(!ji.contains("capacidad") || !ji["capacidad"].is_object()
                    || !ji.contains("ocupados") || !ji["ocupados"].is_object()){
-                    error = "Inventario invalido: capacidad/ocupados requeridos.";
+                    error = "Inventario invalido: capacidad/ocupados requeridos (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
                 const auto& cap = ji["capacidad"];
@@ -129,19 +154,20 @@ namespace JsonStore{
                 if(!is_non_negative_int(cap, "GENERAL")
                    || !is_non_negative_int(cap, "TRIBUNA")
                    || !is_non_negative_int(cap, "PALCO")){
-                    error = "Inventario invalido: capacidades negativas.";
+                    error = "Inventario invalido: capacidades negativas (eventoId='" + ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(!is_non_negative_int(occ, "GENERAL")
                    || !is_non_negative_int(occ, "TRIBUNA")
                    || !is_non_negative_int(occ, "PALCO")){
-                    error = "Inventario invalido: ocupados negativos.";
+                    error = "Inventario invalido: ocupados negativos (eventoId='" + ji.value("eventoId", "") + "').";
                     return false;
                 }
                 if(occ["GENERAL"].get<int>() > cap["GENERAL"].get<int>()
                    || occ["TRIBUNA"].get<int>() > cap["TRIBUNA"].get<int>()
                    || occ["PALCO"].get<int>() > cap["PALCO"].get<int>()){
-                    error = "Inventario invalido: ocupados exceden capacidad.";
+                    error = "Inventario invalido: ocupados exceden capacidad (eventoId='" +
+                            ji.value("eventoId", "") + "').";
                     return false;
                 }
             }
