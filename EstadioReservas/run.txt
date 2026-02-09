@@ -1,2 +1,26 @@
-make
-./estadio
+& "C:\msys64\ucrt64\bin\g++.exe" -std=gnu++17 -Wall -Wextra -O2 `
+  -I "include" `
+  "src\main.cpp" `
+  "src\model\Fecha.cpp" `
+  "src\model\Usuario.cpp" `
+  "src\model\Evento.cpp" `
+  "src\model\InventarioEvento.cpp" `
+  "src\model\Reserva.cpp" `
+  "src\view\MenuView.cpp" `
+  "src\view\Printer.cpp" `
+  "src\controller\AuthController.cpp" `
+  "src\controller\EventoController.cpp" `
+  "src\controller\ReservaController.cpp" `
+  "src\utils\CedulaEC.cpp" `
+  "src\utils\DateUtils.cpp" `
+  "src\utils\JsonStore.cpp" `
+  "src\utils\InputUtils.cpp" `
+  "src\utils\OrdenamientoController.cpp" `
+  "src\utils\BSTDemo.cpp" `
+  "src\utils\EstrategiasController.cpp" `
+  "src\utils\StringUtils.cpp" `
+  "src\structures\HashTable.cpp" `
+  "src\structures\BinarySearchTree.cpp" `
+  -o "estadio.exe"
+
+./estadio.exe
