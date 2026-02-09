@@ -1,5 +1,8 @@
 #include "utils/JsonStore.hpp"
 #include "nlohmann/json.hpp"
+#include "utils/CedulaEC.hpp"
+#include "utils/InputUtils.hpp"
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <utility>
@@ -7,8 +10,14 @@
 using nlohmann::json;
 
 static bool file_exists(const std::string& p){ std::ifstream f(p); return f.good(); }
-static bool is_non_empty_string(const json& j, const char* key){
-    return j.contains(key) && j[key].is_string() && !j[key].get<std::string>().empty();
+static bool is_non_blank_string(const json& j, const char* key){
+    if(!j.contains(key) || !j[key].is_string()) return false;
+    const std::string value = j[key].get<std::string>();
+    if(value.empty()) return false;
+    for(char c : value){
+        if(!std::isspace(static_cast<unsigned char>(c))) return true;
+    }
+    return false;
 }
 
 static bool is_non_negative_int(const json& j, const char* key){
@@ -33,8 +42,16 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& ju : j["usuarios"]){
-                if(!is_non_empty_string(ju, "cedula") || !is_non_empty_string(ju, "nombre")){
+                if(!is_non_blank_string(ju, "cedula") || !is_non_blank_string(ju, "nombre")){
                     error = "Usuario invalido: cedula/nombre requeridos.";
+                    return false;
+                }
+                if(!CedulaEC::validar(ju.value("cedula", ""))){
+                    error = "Usuario invalido: cedula no valida.";
+                    return false;
+                }
+                if(!InputUtils::nombreValido(ju.value("nombre", ""))){
+                    error = "Usuario invalido: nombre no valida.";
                     return false;
                 }
                 if(ju.contains("reservas")){
@@ -43,7 +60,7 @@ namespace JsonStore{
                         return false;
                     }
                     for(const auto& jr : ju["reservas"]){
-                        if(!is_non_empty_string(jr, "eventoId")){
+                        if(!is_non_blank_string(jr, "eventoId")){
                             error = "Reserva invalida: eventoId requerido.";
                             return false;
                         }
@@ -76,11 +93,15 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& je : j["eventos"]){
-                if(!is_non_empty_string(je, "id") || !is_non_empty_string(je, "nombre")){
+                if(!is_non_blank_string(je, "id") || !is_non_blank_string(je, "nombre")){
                     error = "Evento invalido: id/nombre requeridos.";
                     return false;
                 }
-                if(!is_non_empty_string(je, "fecha")){
+                if(!InputUtils::nombreValido(je.value("nombre", ""))){
+                    error = "Evento invalido: nombre no valida.";
+                    return false;
+                }
+                if(!is_non_blank_string(je, "fecha")){
                     error = "Evento invalido: fecha requerida.";
                     return false;
                 }
@@ -111,7 +132,7 @@ namespace JsonStore{
                 return false;
             }
             for(const auto& ji : j["inventarios"]){
-                if(!is_non_empty_string(ji, "eventoId")){
+                if(!is_non_blank_string(ji, "eventoId")){
                     error = "Inventario invalido: eventoId requerido.";
                     return false;
                 }
