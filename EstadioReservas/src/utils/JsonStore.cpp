@@ -7,8 +7,160 @@
 using nlohmann::json;
 
 static bool file_exists(const std::string& p){ std::ifstream f(p); return f.good(); }
+static bool is_non_empty_string(const json& j, const char* key){
+    return j.contains(key) && j[key].is_string() && !j[key].get<std::string>().empty();
+}
+
+static bool is_non_negative_int(const json& j, const char* key){
+    return j.contains(key) && j[key].is_number_integer() && j[key].get<int>() >= 0;
+}
+
+static bool is_positive_int(const json& j, const char* key){
+    return j.contains(key) && j[key].is_number_integer() && j[key].get<int>() > 0;
+}
 
 namespace JsonStore{
+    bool validarUsuarios(const std::string& ruta, std::string& error){
+        if(!file_exists(ruta)){
+            error = "Archivo de usuarios no existe: " + ruta;
+            return false;
+        }
+        try{
+            std::ifstream in(ruta);
+            json j; in >> j;
+            if(!j.contains("usuarios") || !j["usuarios"].is_array()){
+                error = "Formato invalido: falta arreglo 'usuarios'.";
+                return false;
+            }
+            for(const auto& ju : j["usuarios"]){
+                if(!is_non_empty_string(ju, "cedula") || !is_non_empty_string(ju, "nombre")){
+                    error = "Usuario invalido: cedula/nombre requeridos.";
+                    return false;
+                }
+                if(ju.contains("reservas")){
+                    if(!ju["reservas"].is_array()){
+                        error = "Reservas invalidas: debe ser arreglo.";
+                        return false;
+                    }
+                    for(const auto& jr : ju["reservas"]){
+                        if(!is_non_empty_string(jr, "eventoId")){
+                            error = "Reserva invalida: eventoId requerido.";
+                            return false;
+                        }
+                        if(!is_non_negative_int(jr, "GENERAL")
+                           || !is_non_negative_int(jr, "TRIBUNA")
+                           || !is_non_negative_int(jr, "PALCO")){
+                            error = "Reserva invalida: cantidades negativas.";
+                            return false;
+                        }
+                    }
+                }
+            }
+        }catch(const std::exception& e){
+            error = std::string("Error leyendo usuarios: ") + e.what();
+            return false;
+        }
+        return true;
+    }
+
+    bool validarEventos(const std::string& ruta, std::string& error){
+        if(!file_exists(ruta)){
+            error = "Archivo de eventos no existe: " + ruta;
+            return false;
+        }
+        try{
+            std::ifstream in(ruta);
+            json j; in >> j;
+            if(!j.contains("eventos") || !j["eventos"].is_array()){
+                error = "Formato invalido: falta arreglo 'eventos'.";
+                return false;
+            }
+            for(const auto& je : j["eventos"]){
+                if(!is_non_empty_string(je, "id") || !is_non_empty_string(je, "nombre")){
+                    error = "Evento invalido: id/nombre requeridos.";
+                    return false;
+                }
+                if(!is_non_empty_string(je, "fecha")){
+                    error = "Evento invalido: fecha requerida.";
+                    return false;
+                }
+                try{
+                    Fecha::parseISO(je.value("fecha", "1970-01-01"));
+                }catch(const std::exception&){
+                    error = "Evento invalido: fecha con formato incorrecto.";
+                    return false;
+                }
+            }
+        }catch(const std::exception& e){
+            error = std::string("Error leyendo eventos: ") + e.what();
+            return false;
+        }
+        return true;
+    }
+
+    bool validarInventarios(const std::string& ruta, std::string& error){
+        if(!file_exists(ruta)){
+            error = "Archivo de inventarios no existe: " + ruta;
+            return false;
+        }
+        try{
+            std::ifstream in(ruta);
+            json j; in >> j;
+            if(!j.contains("inventarios") || !j["inventarios"].is_array()){
+                error = "Formato invalido: falta arreglo 'inventarios'.";
+                return false;
+            }
+            for(const auto& ji : j["inventarios"]){
+                if(!is_non_empty_string(ji, "eventoId")){
+                    error = "Inventario invalido: eventoId requerido.";
+                    return false;
+                }
+                if(!is_positive_int(ji, "limitePorUsuario")){
+                    error = "Inventario invalido: limitePorUsuario debe ser positivo.";
+                    return false;
+                }
+                if(!ji.contains("capacidad") || !ji["capacidad"].is_object()
+                   || !ji.contains("ocupados") || !ji["ocupados"].is_object()){
+                    error = "Inventario invalido: capacidad/ocupados requeridos.";
+                    return false;
+                }
+                const auto& cap = ji["capacidad"];
+                const auto& occ = ji["ocupados"];
+                if(!is_non_negative_int(cap, "GENERAL")
+                   || !is_non_negative_int(cap, "TRIBUNA")
+                   || !is_non_negative_int(cap, "PALCO")){
+                    error = "Inventario invalido: capacidades negativas.";
+                    return false;
+                }
+                if(!is_non_negative_int(occ, "GENERAL")
+                   || !is_non_negative_int(occ, "TRIBUNA")
+                   || !is_non_negative_int(occ, "PALCO")){
+                    error = "Inventario invalido: ocupados negativos.";
+                    return false;
+                }
+                if(occ["GENERAL"].get<int>() > cap["GENERAL"].get<int>()
+                   || occ["TRIBUNA"].get<int>() > cap["TRIBUNA"].get<int>()
+                   || occ["PALCO"].get<int>() > cap["PALCO"].get<int>()){
+                    error = "Inventario invalido: ocupados exceden capacidad.";
+                    return false;
+                }
+            }
+        }catch(const std::exception& e){
+            error = std::string("Error leyendo inventarios: ") + e.what();
+            return false;
+        }
+        return true;
+    }
+
+    bool validarDatos(const std::string& rutaUsuarios,
+                      const std::string& rutaEventos,
+                      const std::string& rutaInventarios,
+                      std::string& error){
+        if(!validarUsuarios(rutaUsuarios, error)) return false;
+        if(!validarEventos(rutaEventos, error)) return false;
+        if(!validarInventarios(rutaInventarios, error)) return false;
+        return true;
+    }
 
     void loadUsuarios(LinkedList<Usuario>& out, const std::string& ruta){
         if(!file_exists(ruta)) return;
