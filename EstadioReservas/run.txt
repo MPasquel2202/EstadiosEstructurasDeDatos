@@ -1,6 +1,5 @@
 & "C:\msys64\ucrt64\bin\g++.exe" -std=gnu++17 -Wall -Wextra -O2 `
   -I "include" `
-  -I "include\utils" `
   "src\main.cpp" `
   "src\model\Fecha.cpp" `
   "src\model\Usuario.cpp" `
@@ -24,4 +23,4 @@
   "src\structures\BinarySearchTree.cpp" `
   -o "estadio.exe"
 
-.\estadio.exe
+./estadio.exe
