@@ -43,16 +43,15 @@ namespace JsonStore{
             }
             for(const auto& ju : j["usuarios"]){
                 if(!is_non_blank_string(ju, "cedula") || !is_non_blank_string(ju, "nombre")){
-                    error = "Usuario invalido: cedula/nombre requeridos (cedula='" + ju.value("cedula", "") +
-                            "', nombre='" + ju.value("nombre", "") + "').";
+                    error = "Usuario invalido: cedula/nombre requeridos.";
                     return false;
                 }
                 if(!CedulaEC::validar(ju.value("cedula", ""))){
-                    error = "Usuario invalido: cedula no valida ('" + ju.value("cedula", "") + "').";
+                    error = "Usuario invalido: cedula no valida.";
                     return false;
                 }
                 if(!InputUtils::nombreValido(ju.value("nombre", ""))){
-                    error = "Usuario invalido: nombre no valida ('" + ju.value("nombre", "") + "').";
+                    error = "Usuario invalido: nombre no valida.";
                     return false;
                 }
                 if(ju.contains("reservas")){
@@ -62,7 +61,7 @@ namespace JsonStore{
                     }
                     for(const auto& jr : ju["reservas"]){
                         if(!is_non_blank_string(jr, "eventoId")){
-                            error = "Reserva invalida: eventoId requerido (eventoId='" + jr.value("eventoId", "") + "').";
+                            error = "Reserva invalida: eventoId requerido.";
                             return false;
                         }
                         if(!is_non_negative_int(jr, "GENERAL")
@@ -95,16 +94,15 @@ namespace JsonStore{
             }
             for(const auto& je : j["eventos"]){
                 if(!is_non_blank_string(je, "id") || !is_non_blank_string(je, "nombre")){
-                    error = "Evento invalido: id/nombre requeridos (id='" + je.value("id", "") +
-                            "', nombre='" + je.value("nombre", "") + "').";
+                    error = "Evento invalido: id/nombre requeridos.";
                     return false;
                 }
                 if(!InputUtils::nombreValido(je.value("nombre", ""))){
-                    error = "Evento invalido: nombre no valida ('" + je.value("nombre", "") + "').";
+                    error = "Evento invalido: nombre no valida.";
                     return false;
                 }
                 if(!is_non_blank_string(je, "fecha")){
-                    error = "Evento invalido: fecha requerida (id='" + je.value("id", "") + "').";
+                    error = "Evento invalido: fecha requerida.";
                     return false;
                 }
                 try{
@@ -135,7 +133,7 @@ namespace JsonStore{
             }
             for(const auto& ji : j["inventarios"]){
                 if(!is_non_blank_string(ji, "eventoId")){
-                    error = "Inventario invalido: eventoId requerido (eventoId='" + ji.value("eventoId", "") + "').";
+                    error = "Inventario invalido: eventoId requerido.";
                     return false;
                 }
                 if(!is_positive_int(ji, "limitePorUsuario")){
