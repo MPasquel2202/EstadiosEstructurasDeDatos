@@ -76,8 +76,8 @@ int main(){
                 Printer::listarEventos(eventos, inventarios,
                     [&](const Evento& e){ return EventoController::esReservable(e); });
 
-                std::cout << "\n[1] Reservar  [2] Menu Ordenamiento  [3] Cancelar reserva  [4] Ordenar Nombres  [5] Estructuras (BST/Hash)  [6] Filtrar eventos por fecha  [7] Estrategias de diseno  [0] Cerrar sesion \n Opcion: ";
-                int opc = InputUtils::leerEnteroEnRango(0,7);
+                std::cout << "\n[1] Reservar  [2] Listar reservas  [3] Menu Ordenamiento  [4] Cancelar reserva  [5] Ordenar Nombres  [6] Estructuras (BST/Hash)  [7] Filtrar eventos por fecha  [8] Estrategias de diseno  [0] Cerrar sesion \n Opcion: ";
+                int opc = InputUtils::leerEnteroEnRango(0,8);
 
                 switch(opc){
                     case 1: {
@@ -102,11 +102,15 @@ int main(){
                         break;
                     }
                     case 2: {
+                        Printer::mostrarReservasUsuario(*usr, eventos);
+                        break;
+                    }
+                    case 3: {
                         // Menú completo de ordenamiento (eventos e inventarios)
                         OrdenamientoController::mostrarMenuOrdenamiento(eventos, inventarios);
                         break;
                     }
-                    case 3: {
+                    case 4: {
                         Evento* evt = EventoController::seleccionarEvento(indiceEventos, eventos);
                         if(!evt) break;
                         if(!EventoController::esReservable(*evt)){
@@ -122,12 +126,12 @@ int main(){
                         }
                         break;
                     }
-                    case 4: {
+                    case 5: {
                         // Nueva opción directa para ordenar letras de nombres
                         OrdenamientoController::ordenarLetrasNombresUsuarios();
                         break;
                     }
-                    case 5: {
+                    case 6: {
                         bool volverEstructuras = false;
                         while(!volverEstructuras){
                             std::cout << "\n[1] Listar eventos (BST en orden)  [2] Imprimir tabla hash de inventarios  [3] Imprimir tabla hash encriptada  [0] Volver\n Opcion: ";
@@ -154,11 +158,11 @@ int main(){
                         }
                         break;
                     }
-                    case 6: {
+                    case 7: {
                         EventoController::filtrarPorFecha(eventos, inventarios);
                         break;
                     }
-                    case 7: {
+                    case 8: {
                         EstrategiasController::mostrarMenuEstrategias(eventos, inventarios, usuarios);
                         break;
                     }
